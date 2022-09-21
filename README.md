@@ -1,23 +1,39 @@
-# NCurses Music Player Client (Plus Plus)
+# Music Player Plus MPD Client
 
-Project page - https://rybczak.net/ncmpcpp/
+MPD is the Music Player Daemon, an open source music player server.
 
-## ncmpcpp – featureful ncurses based MPD client inspired by ncmpc
+The `mpcplus` ncurses MPD client is derived from `ncmpcpp` and customized
+for integration with the
+[MusicPlayerPlus project](https://github.com/doctorfree/MusicPlayerPlus).
 
-### Main features:
+Project page - https://github.com/doctorfree/mpcplus
+
+## mpcplus – Featureful ncurses based MPD client inspired by ncmpcpp
+
+## Table of Contents
+
+1. [Main features](#main-features)
+1. [Dependencies](#dependencies)
+1. [Known issues](#known-issues)
+1. [Installation](#installation)
+1. [Documentation](#documentation)
+1. [Optional features](#optional-features)
+
+### Main features
 
 * tag editor
 * playlist editor
 * easy to use search engine
 * media library
-* music visualizer
+* integration with cava spectrum visualizer
+* ability to fetch song lyrics from a variety of sources
 * ability to fetch artist info from last.fm
 * new display mode
 * alternative user interface
 * ability to browse and add files from outside of MPD music directory
 …and a lot more minor functions.
 
-### Dependencies:
+### Dependencies
 
 * boost library [https://www.boost.org/]
 * ncurses library [http://www.gnu.org/software/ncurses/ncurses.html]
@@ -26,10 +42,15 @@ Project page - https://rybczak.net/ncmpcpp/
 * fftw library (optional, required for frequency spectrum music visualization mode) [http://www.fftw.org/]
 * tag library (optional, required for tag editing) [https://taglib.org/]
 
-### Known issues:
+For example, on Ubuntu/Debian (boost, ncurses, readline, curl, mpd):
+```
+sudo apt install libboost-all-dev libncurses5-dev libncursesw5-dev libreadline-dev libcurl4-gnutls-dev libmpdclient-dev
+```
+
+### Known issues
 * No full support for handling encodings other than UTF-8.
 
-### Installation:
+### Installation
 
 The simplest way to compile this package is:
 
@@ -52,11 +73,13 @@ The simplest way to compile this package is:
   6. You can remove the program binaries and object files from the
      source code directory by typing `make clean`.
 
-Detailed intallation instructions can be found in the `INSTALL` file. 
+Generic intallation instructions can be found in the `INSTALL` file. 
 
-### Optional features:
+### Documentation
+* [**mpcplus key bindings**](../markdown/mpcpluskeys.1.md) - mpcplus user interface reference
+* [**mpcplus man page**](../markdown/mpcplus.1.md) - mpcplus command manual
 
-Optional features can be enable by specifying them during configure. For
+### Optional features
+
+Optional features can be enabled by specifying them during configure. For
 example, to enable visualizer run `./configure --enable-visualizer`. 
-
-Additional details can be found in the INSTALL file. 

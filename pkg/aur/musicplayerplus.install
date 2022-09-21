@@ -1,0 +1,12 @@
+post_install() {
+  printf "%b\n" "${mppin}"
+}
+
+read -d '' mppin <<'EOF'
+Perform the following post-installation initialization:
+  - Run the 'mpcinit' command as your normal user (REQUIRED)
+
+View additional post-installation configuration details at:
+  - https://github.com/doctorfree/mpcplus#readme
+  - https://github.com/doctorfree/mpcplus/wiki
+EOF

@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_LYRICS_FETCHER_H
-#define NCMPCPP_LYRICS_FETCHER_H
+#ifndef MPCPLUS_LYRICS_FETCHER_H
+#define MPCPLUS_LYRICS_FETCHER_H
 
 #include "config.h"
 
@@ -110,7 +110,7 @@ struct AzLyricsFetcher : public GoogleLyricsFetcher
 	virtual const char *name() const override { return "azlyrics.com"; }
 	
 protected:
-	virtual const char *regex() const override { return "<div class=\"lyricsh\">.*?</h2>.*<div>(.*?)</div>"; }
+	virtual const char *regex() const override { return "<!-- Usage of azlyrics.com content by any third-party lyrics provider is prohibited by our licensing agreement. Sorry about that. -->(.*?)</div>"; }
 };
 
 struct GeniusFetcher : public GoogleLyricsFetcher
@@ -168,4 +168,4 @@ private:
 	std::string URL;
 };
 
-#endif // NCMPCPP_LYRICS_FETCHER_H
+#endif // MPCPLUS_LYRICS_FETCHER_H

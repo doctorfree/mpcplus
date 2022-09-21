@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=mpcplus
+Comment=NCurses MPD client
+Keywords=Terminal;Audio;Player
+Terminal=true
+TryExec=mpcplus
+Exec=mpcplus
+Icon=mpd
+Type=Application
+StartupNotify=false
+Categories=Audio;Player;ConsoleOnly;

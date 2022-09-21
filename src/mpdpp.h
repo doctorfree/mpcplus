@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_MPDPP_H
-#define NCMPCPP_MPDPP_H
+#ifndef MPCPLUS_MPDPP_H
+#define MPCPLUS_MPDPP_H
 
 #include <cassert>
 #include <exception>
@@ -121,6 +121,7 @@ struct Status
 	unsigned elapsedTime() const { return mpd_status_get_elapsed_time(m_status.get()); }
 	unsigned totalTime() const { return mpd_status_get_total_time(m_status.get()); }
 	unsigned kbps() const { return mpd_status_get_kbit_rate(m_status.get()); }
+	const mpd_audio_format *format() const { return mpd_status_get_audio_format(m_status.get()); }
 	unsigned updateID() const { return mpd_status_get_update_id(m_status.get()); }
 	const char *error() const { return mpd_status_get_error(m_status.get()); }
 	
@@ -624,4 +625,4 @@ private:
 
 extern MPD::Connection Mpd;
 
-#endif // NCMPCPP_MPDPP_H
+#endif // MPCPLUS_MPDPP_H

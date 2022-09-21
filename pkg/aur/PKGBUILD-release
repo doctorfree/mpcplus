@@ -1,0 +1,117 @@
+# Maintainer: Ronald Record <github@ronrecord.com>
+
+pkgname=mpcplus
+pkgver=v${VERSION}r${RELEASE}
+pkgrel=${PACKAGE}
+pkgver=v1.0.0r1
+pkgrel=1
+pkgdesc="NCurses character based MPD client"
+arch=('x86_64' 'armv7h')
+url="https://github.com/doctorfree/mpcplus"
+license=('MIT')
+
+    boost library [https://www.boost.org/]
+    ncurses library [http://www.gnu.org/software/ncurses/ncurses.html]
+    readline library [https://tiswww.case.edu/php/chet/readline/rltop.html]
+    curl library (optional, required for fetching lyrics and last.fm data) [https://curl.haxx.se/]
+    fftw library (optional, required for frequency spectrum music visualization mode) [http://www.fftw.org/]
+    tag library (optional, required for tag editing) [https://taglib.org/]
+
+depends=(boost-libs libcurl-compat libmpdclient ncurses readline taglib mpd mpc python python-pip fftw)
+makedepends=(boost git pandoc zip)
+install=mpcplus.install
+source=("${pkgname}::git+https://github.com/doctorfree/mpcplus.git#tag=${pkgver}")
+
+sha256sums=('SKIP')
+
+prepare() {
+  cd "${srcdir}/${pkgname}"
+}
+
+build() {
+  cd "${srcdir}/${pkgname}"
+  # Build mpcplus
+  if [ -x scripts/build-mpcplus.sh ]
+  then
+    scripts/build-mpcplus.sh -v
+  else
+    cd mpcplus
+    make clean
+    make distclean
+    [ -x ./configure ] || ./autogen.sh > /dev/null
+    ./configure --prefix=/usr \
+                --enable-outputs \
+                --enable-clock \
+                --enable-visualizer \
+                --with-fftw \
+                --with-taglib > configure$$.out
+    make > make$$.out
+    cd ..
+  fi
+}
+
+package() {
+  cd "${srcdir}/${pkgname}"
+  destdir=usr
+  for dir in "${destdir}" "${destdir}/share" "${destdir}/share/man" \
+    "${destdir}/share/applications" "${destdir}/share/doc" \
+    "${destdir}/share/doc/${pkgname}" \
+    "${destdir}/share/consolefonts" "${destdir}/share/${pkgname}" \
+    "${destdir}/share/licenses" "${destdir}/share/licenses/${pkgname}"
+  do
+    [ -d ${pkgdir}/${dir} ] || mkdir ${pkgdir}/${dir}
+  done
+
+  for dir in bin
+  do
+    [ -d ${pkgdir}/${destdir}/${dir} ] && rm -rf ${pkgdir}/${destdir}/${dir}
+  done
+
+  cp -a bin ${pkgdir}/${destdir}/bin
+  cp src/mpcplus ${pkgdir}/${destdir}/bin/mpcplus
+  cp *.desktop "${pkgdir}/${destdir}/share/applications"
+  cp copyright ${pkgdir}/${destdir}/share/doc/${pkgname}
+  cp LICENSE ${pkgdir}/${destdir}/share/doc/${pkgname}
+  cp LICENSE ${pkgdir}/${destdir}/share/licenses/${pkgname}
+  cp NOTICE ${pkgdir}/${destdir}/share/doc/${pkgname}
+  cp AUTHORS ${pkgdir}/${destdir}/share/doc/${pkgname}
+  cp CHANGELOG.md ${pkgdir}/${destdir}/share/doc/${pkgname}
+  cp README.md ${pkgdir}/${destdir}/share/doc/${pkgname}
+  pandoc -f gfm README.md | tee ${pkgdir}/${destdir}/share/doc/${pkgname}/README.html > /dev/null
+  gzip -9 ${pkgdir}/${destdir}/share/doc/${pkgname}/CHANGELOG.md
+
+  cp AUTHORS ${pkgdir}/${destdir}/share/doc/${pkgname}
+  cp COPYING ${pkgdir}/${destdir}/share/doc/${pkgname}
+  cp CHANGELOG.md ${pkgdir}/${destdir}/share/doc/${pkgname}
+  cp README.md ${pkgdir}/${destdir}/share/doc/${pkgname}
+
+  cp doc/config ${pkgdir}/${destdir}/share/${pkgname}
+  cp doc/bindings ${pkgdir}/${destdir}/share/${pkgname}
+  cp config/default_cover.png ${pkgdir}/${destdir}/share/${pkgname}
+  cp config/fzmp.conf ${pkgdir}/${destdir}/share/${pkgname}
+  cp share/mpcplus-cheat-sheet.txt ${pkgdir}/${destdir}/share/${pkgname}
+  cp share/mpcplus-cheat-sheet.md ${pkgdir}/${destdir}/share/${pkgname}
+
+  cp -a share/scripts ${pkgdir}/${destdir}/share/${pkgname}/scripts
+
+  cp -a config/mpd "${pkgdir}/${destdir}/share/${pkgname}/mpd"
+  cp -a config/ueberzug ${pkgdir}/${destdir}/share/${pkgname}/ueberzug
+
+  cp -a man/man1 ${pkgdir}/${destdir}/share/man/man1
+  cp -a share/menu "${pkgdir}/${destdir}/share/menu"
+
+  [ -f .gitignore ] && {
+    while read ignore
+    do
+        rm -f ${pkgdir}/${destdir}/${ignore}
+    done < .gitignore
+  }
+
+  chmod 644 ${pkgdir}/${destdir}/share/man/*/*
+  chmod 644 ${pkgdir}/${destdir}/share/menu/*
+  chmod 755 ${pkgdir}/${destdir}/bin/* \
+            ${pkgdir}/${destdir}/bin \
+            ${pkgdir}/${destdir}/share/man \
+            ${pkgdir}/${destdir}/share/man/* \
+            ${pkgdir}/${destdir}/share/${pkgname}/scripts/*
+}

@@ -1,3 +1,15 @@
+# Changelog
+
+# mpcplus-1.0.0 (2022-09-21)
+* Forked as separate standalone project
+* Integrated features and customizations from MusicPlayerPlus
+
+# mpcplus-0.10 (2022-03-26)
+* Integrated into MusicPlayerPlus project
+
+# mpcplus-0.10 (2022-03-24)
+* Forked and changed name to mpcplus
+
 # ncmpcpp-0.10 (????-??-??)
 * Add the configuration option `mpd_password`.
 * Separate chunks of lyrics with a double newline.

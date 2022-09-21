@@ -213,7 +213,7 @@ bool Configuration::read(const std::vector<std::string> &config_paths, bool igno
 {
 	option_parser p;
 	// keep the same order of variables as in configuration file
-	p.add("ncmpcpp_directory", &ncmpcpp_directory, "~/.config/ncmpcpp/", adjust_directory);
+	p.add("mpcplus_directory", &mpcplus_directory, "~/.config/mpcplus/", adjust_directory);
 	p.add("lyrics_directory", &lyrics_directory, "~/.lyrics/", adjust_directory);
 	p.add<void>("mpd_host", nullptr, "localhost", [](std::string host) {
 			expand_home(host);
@@ -230,7 +230,7 @@ bool Configuration::read(const std::vector<std::string> &config_paths, bool igno
 	p.add("mpd_connection_timeout", &mpd_connection_timeout, "5");
 	p.add("mpd_crossfade_time", &crossfade_time, "5");
 	p.add("random_exclude_pattern", &random_exclude_pattern, "");
-	p.add("visualizer_data_source", &visualizer_data_source, "/tmp/mpd.fifo", adjust_path);
+	p.add("visualizer_data_source", &visualizer_data_source, "~/.config/mpd/mpd.fifo", adjust_path);
 	p.add("visualizer_output_name", &visualizer_output_name, "Visualizer feed");
 	p.add("visualizer_in_stereo", &visualizer_in_stereo, "yes", yes_no);
 	p.add("visualizer_type", &visualizer_type,

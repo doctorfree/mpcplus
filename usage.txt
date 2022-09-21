@@ -1,0 +1,23 @@
+=============================================================================
+
+Usage: mpcplus [options]...
+Options:
+  -h [ --host ] HOST (=localhost)       connect to server at host
+  -p [ --port ] PORT (=6600)            connect to server at port
+  --current-song [=FORMAT(={{{(%l) }{{%a - }%t}}|{%f}})]
+                                        print current song using given format 
+                                        and exit
+  -c [ --config ] PATH (=~/.config/mpcplus/config AND ~/.mpcplus/config)
+                                        specify configuration file(s)
+  --ignore-config-errors                ignore unknown and invalid options in 
+                                        configuration files
+  --test-lyrics-fetchers                check if lyrics fetchers work
+  -b [ --bindings ] PATH (=~/.config/mpcplus/bindings AND ~/.mpcplus/bindings)
+                                        specify bindings file(s)
+  -s [ --screen ] SCREEN                specify the startup screen
+  -S [ --slave-screen ] SCREEN          specify the startup slave screen
+  -? [ --help ]                         show help message
+  -v [ --version ]                      display version information
+  -q [ --quiet ]                        suppress logs and excess output
+
+=============================================================================

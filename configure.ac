@@ -1,4 +1,4 @@
-AC_INIT([ncmpcpp], [0.10_dev])
+AC_INIT([mpcplus], [1.0.0])
 AC_CONFIG_SRCDIR([configure.ac])
 AC_CONFIG_HEADERS(config.h)
 AM_INIT_AUTOMAKE([subdir-objects])
