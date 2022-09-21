@@ -19,7 +19,7 @@ Cava spectrum visualizer.
 Read more about MPD at http://www.musicpd.org
 
 Read more about `mppcava` at
-https://github.com/doctorfree/mppcava#readme
+https://github.com/doctorfree/MusicPlayerPlus/tree/master/mppcava#readme
 
 ## COMMAND LINE OPTIONS
 Mandatory arguments to long options are mandatory for short options as well.
