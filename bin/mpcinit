@@ -5,10 +5,9 @@
 # Copy and configure default configuration files in $HOME/.config/mpcplus/
 #
 
-MPCCDIR=/usr/share/mpcplus
+MPCONFDIR=/usr/share/mpcplus
+SCPTDIR=${MPCONFDIR}/scripts
 MPPCDIR=/usr/share/musicplayerplus
-MPCONFDIR=${MPCCDIR}/mpcplus
-SCPTDIR=${MPCCDIR}/scripts
 MPPSCPTDIR=${MPPCDIR}/scripts
 USERCONF=${HOME}/.config
 MPDCONFDIR="${USERCONF}/mpd"
@@ -77,7 +76,6 @@ set_music_dir() {
 }
 
 sync_music_dir() {
-  set_music_dir
   if [ "${mpd_music}" ]
   then
     mpc_music=`grep ^mpd_music_dir ${MPCDIR}/config`
@@ -377,6 +375,7 @@ fi
 }
 
 get_mpd_status
+set_music_dir
 
 [ -d ${USERCONF} ] || mkdir ${USERCONF}
 if [ -f ${USERCONF}/mpcplus/config ]
@@ -537,43 +536,24 @@ install_mpc() {
 
 printf "\nInitializing mpcplus, please wait ..."
 
-# Check if default music library location is empty
+# Check if configured music library location is empty
 empty_music=1
-for msub in Music music
-do
-  for mdir in ${HOME}/${msub}/*
+[ -d "${exp_music}" ]  && {
+  for mdir in ${exp_music}/*
   do
-    [ "${mdir}" == "${HOME}/${msub}/*" ] && continue
-    [ "${mdir}" == "${HOME}/${msub}/Playlists" ] && continue
+    [ "${mdir}" == "${exp_music}/*" ] && continue
+    [ "${mdir}" == "${exp_music}/Playlists" ] && continue
     empty_music=
-    break 2
+    break
   done
-done
-
-[ "${empty_music}" ] && {
-  [ -f ${USERCONF}/user-dirs.dirs ] && {
-    # Try XDG_MUSIC_DIR
-    have_xdg=`type -p xdg-user-dir`
-    [ "${have_xdg}" ] && {
-      xdgm=`xdg-user-dir MUSIC`
-      [ "${xdgm}" ] && {
-        for mdir in ${xdgm}/*
-        do
-          [ "${mdir}" == "${xdgm}/*" ] && continue
-          [ "${mdir}" == "${xdgm}/Playlists" ] && continue
-          empty_music=
-        done
-      }
-    }
-  }
 }
 
 [ "${empty_music}" ] && {
-  printf "\n\n${BOLD}Default music library locations appear empty${NORM}"
+  printf "\n\n${BOLD}Configured music library location appears empty${NORM}"
   printf "\nmpcplus initialization will continue with an empty library."
   printf "\nThe music library can be populated later or, if your music library"
-  printf "\nis in a custom location, simply edit $HOME/.config/mpd/mpd.conf"
-  printf "\nafter initialization completes and run 'mpcinit sync'.\n"
+  printf "\nis in a custom location, edit $HOME/.config/mpd/mpd.conf or"
+  printf "\n/etc/mpd.conf after initialization and run 'mpcinit sync'.\n"
 }
 
 [ "${centos}" ] && {
