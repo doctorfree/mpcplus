@@ -21,3 +21,17 @@ Options:
   -q [ --quiet ]                        suppress logs and excess output
 
 =============================================================================
+
+Usage: mpcinit [-o] [-q] [-r] [-U] [-y] [-u] [mpd|sync]
+Where:
+	'-o' indicates overwrite any pre-existing configuration
+	'-q' indicates quiet execution, no status messages
+	'-y' indicates answer 'yes' to all and proceed
+	'-u' displays this usage message and exits
+
+	'mpd' activates the MPD music server
+	'sync' synchronizes mpcplus configuration across configs
+
+'mpcinit' must be run as the mpcplus user, not root.
+
+=============================================================================

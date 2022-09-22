@@ -246,35 +246,15 @@ provide a brief summary of the command line options.
 The `mpcinit` performs one-time initializations:
 
 ```
-Usage: mpcinit [-a] [-b] [-d] [-e] [-l music_dir] [-o] [-q] [-r] [-U] [-y] [-u] [bandcamp|import|kitty|metadata|mopidy|mpd|navidrome|soundcloud|sync|yams]
+Usage: mpcinit [-o] [-q] [-r] [-U] [-y] [-u] [mpd|sync]
 Where:
-	'-a' use AcousticBrainz for acoustic audio analysis (deprecated)
-	'-b' use Blissify for MPD acoustic audio analysis
-	'-d' install latest Beets development branch rather than
-		the latest stable release (for testing purposes)
-	'-e' use Essentia for Beets acoustic audio analysis (default)
-	'-l music_dir' specifies the location of the music library
 	'-o' indicates overwrite any pre-existing configuration
 	'-q' indicates quiet execution, no status messages
-	'-r' indicates remove service
-		supported service removals: mopidy navidrome
-	'-U' indicates do not upgrade installed Python modules
 	'-y' indicates answer 'yes' to all and proceed
 	'-u' displays this usage message and exits
 
-	'bandcamp' downloads all albums in your Bandcamp collections
-	'import' performs a Beets music library import
-	'kitty' installs the Kitty terminal emulator
-	'metadata' performs a library metadata update
-	'mopidy' installs and configures Mopidy extensible music server
-		Note: activating Mopidy deactivates MPD
-	'mpd' activates the MPD music server and deactivates Mopidy
-	'navidrome' installs and configures Navidrome music server
-		Note: 'mpcinit navidrome <version>' can be used to specify
-		an alternate version of Navidrome to download and install
-	'soundcloud' downloads all favorites in your Soundcloud account
+	'mpd' activates the MPD music server
 	'sync' synchronizes mpcplus configuration across configs
-	'yams' activates the YAMS Last.fm scrobbler service
 
 'mpcinit' must be run as the mpcplus user, not root.
 ```
