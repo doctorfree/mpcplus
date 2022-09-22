@@ -4,6 +4,27 @@ The `mpcplus` NCurses MPD client is derived from `ncmpcpp` and customized
 for integration with the
 [MusicPlayerPlus project](https://github.com/doctorfree/MusicPlayerPlus).
 
+Many enhancements to `mpcplus` are included in the `MusicPlayerPlus` project.
+These include the display of album cover art in a `tmux` session along side
+`mpcplus`, the frequency spectrum visualizer `mppcava`, and many more.
+The `mpcplus` package gets installed as part of the `MusicPlayerPlus`
+initialization process. To enable these enhancements, install
+`MusicPlayerPlus` rather than `mpcplus`. See the
+[MusicPlayerPlus README](https://github.com/doctorfree/MusicPlayerPlus#readme)
+for more information.
+
+**[Note:]** It is possible to install `mpcplus` first, get a feel for it or
+simply use it as a standalone MPD client, then install `MusicPlayerPlus` to
+add the many enhancements and features available in that package.
+The MusicPlayerPlus initialization will detect a previously installed
+`mpcplus` and reconfigure it appropriately. Many of the
+[doctorfree projects](https://github.com/doctorfree) are designed to
+integrate with each other including
+[Asciiville](https://github.com/doctorfree/Asciiville#readme),
+[MirrorCommand](https://github.com/doctorfree/MirrorCommand#readme),
+[MusicPlayerPlus](https://github.com/doctorfree/MusicPlayerPlus#readme), and
+[RoonCommandLine](https://github.com/doctorfree/RoonCommandLine#readme).
+
 ## Table of Contents
 
 1. [Main features](#main-features)
