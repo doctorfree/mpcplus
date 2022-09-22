@@ -168,7 +168,11 @@ sync_music_dir() {
       fi
       systemctl --user is-enabled --quiet mpd.service > /dev/null 2>&1
       [ $? -eq 0 ] || systemctl --user enable --quiet mpd.service > /dev/null 2>&1
-      [ "${have_mpc}" ] && mpc update --quiet &
+      [ "${have_mpc}" ] && {
+        [ "${sactive}" ] || [ "${uactive}" ] && {
+          mpc update --quiet &
+        }
+      }
     }
   else
     echo "WARNING:"
@@ -478,7 +482,11 @@ install_mpc() {
     systemctl --user is-enabled mpd.service >/dev/null 2>&1 || {
       systemctl --user enable mpd.service > /dev/null 2>&1
     }
-    [ "${have_mpc}" ] && mpc update --quiet &
+    [ "${have_mpc}" ] && {
+      [ "${sactive}" ] || [ "${uactive}" ] && {
+        mpc update --quiet &
+      }
+    }
 
     [ -f ${HOME}/.config/systemd/user/mpdstats.service ] && {
       systemctl --user is-active mpdstats.service >/dev/null 2>&1 || {
