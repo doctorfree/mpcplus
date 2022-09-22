@@ -80,8 +80,6 @@ package() {
   cp src/mpcplus ${pkgdir}/${destdir}/bin/mpcplus
   cp *.desktop "${pkgdir}/${destdir}/share/applications"
   cp copyright ${pkgdir}/${destdir}/share/doc/${pkgname}
-  cp LICENSE ${pkgdir}/${destdir}/share/doc/${pkgname}
-  cp LICENSE ${pkgdir}/${destdir}/share/licenses/${pkgname}
   cp NOTICE ${pkgdir}/${destdir}/share/doc/${pkgname}
   cp AUTHORS ${pkgdir}/${destdir}/share/doc/${pkgname}
   cp CHANGELOG.md ${pkgdir}/${destdir}/share/doc/${pkgname}
@@ -103,7 +101,6 @@ package() {
 
   cp -a share/scripts ${pkgdir}/${destdir}/share/${pkgname}/scripts
 
-  cp -a config/mpd "${pkgdir}/${destdir}/share/${pkgname}/mpd"
   cp -a config/ueberzug ${pkgdir}/${destdir}/share/${pkgname}/ueberzug
 
   cp -a man/man1 ${pkgdir}/${destdir}/share/man/man1
