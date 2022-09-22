@@ -4,9 +4,9 @@ Release:    %{_release}%{?dist}
 BuildArch:  x86_64
 AutoReqProv: no
 %if 0%{?centos} > 0
-Requires: boost, libcurl, libmpdclient, ncurses, readline, taglib, mpd
+Requires: boost, fftw-libs, libcurl, libmpdclient, ncurses, readline, taglib
 %else
-Requires: boost, libcurl, ncurses, readline, taglib, inotify-tools, fzf, mpc
+Requires: boost, fftw-libs, libcurl, libmpdclient, ncurses, readline, taglib, mpc
 %endif
 URL:        https://github.com/doctorfree/mpcplus
 Vendor:     Doctorwhen's Bodacious Laboratory
