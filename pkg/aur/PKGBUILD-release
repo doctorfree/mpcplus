@@ -10,14 +10,7 @@ arch=('x86_64' 'armv7h')
 url="https://github.com/doctorfree/mpcplus"
 license=('MIT')
 
-    boost library [https://www.boost.org/]
-    ncurses library [http://www.gnu.org/software/ncurses/ncurses.html]
-    readline library [https://tiswww.case.edu/php/chet/readline/rltop.html]
-    curl library (optional, required for fetching lyrics and last.fm data) [https://curl.haxx.se/]
-    fftw library (optional, required for frequency spectrum music visualization mode) [http://www.fftw.org/]
-    tag library (optional, required for tag editing) [https://taglib.org/]
-
-depends=(boost-libs libcurl-compat libmpdclient ncurses readline taglib mpd mpc python python-pip fftw)
+depends=(boost-libs libcurl-compat libmpdclient ncurses readline taglib inotify-tools fzf mpd mpc python python-pip fftw)
 makedepends=(boost git pandoc zip)
 install=mpcplus.install
 source=("${pkgname}::git+https://github.com/doctorfree/mpcplus.git#tag=${pkgver}")

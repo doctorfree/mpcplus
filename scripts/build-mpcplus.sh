@@ -39,7 +39,6 @@ usage() {
     exit 1
 }
 
-PROJ=mpcplus
 CONFIGURE_ONLY=
 AUTOGEN_ONLY=
 INSTALL=
@@ -69,19 +68,11 @@ while getopts "aCip:uv" flag; do
 done
 shift $(( OPTIND - 1 ))
 
-[ -d ${PROJ} ] || {
-    echo "$PROJ does not exist or is not a directory."
-    echo "Run: git clone https://github.com/doctorfree/mpcplus"
-    echo "Exiting"
-    exit 1
-}
-
-[ -x ${PROJ}/src/mpcplus ] && {
-    echo "${PROJ}/src/mpcplus already built"
+[ -x src/mpcplus ] && {
+    echo "src/mpcplus already built"
     exit 0
 }
 
-cd ${PROJ}
 [ -x ./configure ] || ./autogen.sh
 [ "${AUTOGEN_ONLY}" ] && exit 0
 

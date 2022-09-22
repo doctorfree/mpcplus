@@ -6,7 +6,7 @@ AutoReqProv: no
 %if 0%{?centos} > 0
 Requires: boost, libcurl, libmpdclient, ncurses, readline, taglib, mpd
 %else
-Requires: boost, libcurl, ncurses, readline, taglib, fzf, mpc
+Requires: boost, libcurl, ncurses, readline, taglib, inotify-tools, fzf, mpc
 %endif
 URL:        https://github.com/doctorfree/mpcplus
 Vendor:     Doctorwhen's Bodacious Laboratory

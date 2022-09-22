@@ -38,7 +38,6 @@ if [ -x scripts/build-mpcplus.sh ]
 then
   scripts/build-mpcplus.sh -v
 else
-  cd mpcplus
   make clean
   make distclean
   [ -x ./configure ] || ./autogen.sh > /dev/null
@@ -49,7 +48,6 @@ else
               --with-fftw \
               --with-taglib > configure$$.out
   make > make$$.out
-  cd ..
 fi
 
 ${SUDO} rm -rf dist
@@ -95,7 +93,7 @@ ${SUDO} cp share/mpcplus-cheat-sheet.md ${OUT_DIR}/${DESTDIR}/share/${PKG}
 ${SUDO} cp -a share/scripts ${OUT_DIR}/${DESTDIR}/share/${PKG}/scripts
 
 ${SUDO} cp -a config/mpd "${OUT_DIR}/${DESTDIR}/share/${PKG}/mpd"
-${SUDO} cp -a config/ueberzug ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus/ueberzug
+${SUDO} cp -a config/ueberzug ${OUT_DIR}/${DESTDIR}/share/${PKG}/ueberzug
 
 ${SUDO} cp -a man/man1 ${OUT_DIR}/${DESTDIR}/share/man/man1
 ${SUDO} cp -a share/menu "${OUT_DIR}/${DESTDIR}/share/menu"
