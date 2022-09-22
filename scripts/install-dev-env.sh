@@ -17,25 +17,23 @@ if [ "${debian}" ]
 then
   PKGS="build-essential libfftw3-dev libtag1-dev libmpdclient-dev \
         autotools-dev autoconf libtool libboost-all-dev fftw-dev \
-        pkg-config libncurses-dev libreadline-dev libcurl4-openssl-dev \
-        pandoc zip"
+        pkg-config libncurses-dev libreadline-dev libcurl4-openssl-dev"
   if [ "$1" == "-r" ]
   then
     sudo apt remove ${PKGS}
   else
-    sudo apt install ${PKGS}
+    sudo apt install ${PKGS} pandoc zip
   fi
 else
   if [ "${arch}" ]
   then
     PKGS="base-devel fftw taglib libmpdclient boost boost-libs \
-          ncurses readline libcurl-compat pandoc zip"
-    RUN_PKGS="mpd fzf mpc"
+          ncurses readline libcurl-compat"
     if [ "$1" == "-r" ]
     then
-      sudo pacman -Rs ${RUN_PKGS}
+      sudo pacman -Rs ${PKGS}
     else
-      sudo pacman -S --needed ${PKGS} ${RUN_PKGS}
+      sudo pacman -S --needed ${PKGS} pandoc zip
     fi
   else
     have_dnf=`type -p dnf`
@@ -48,7 +46,7 @@ else
     sudo ${PINS} makecache
     if [ "${fedora}" ]
     then
-      PKGS="ncurses-devel fftw3-devel libtool automake pandoc zip \
+      PKGS="ncurses-devel fftw3-devel libtool automake \
             libmpdclient-devel taglib-devel"
       if [ "$1" == "-r" ]
       then
@@ -56,13 +54,13 @@ else
       else
         sudo ${PINS} -y groupinstall "Development Tools" "Development Libraries"
         sudo ${PINS} -y install gcc-c++
-        sudo ${PINS} -y install ${PKGS}
+        sudo ${PINS} -y install ${PKGS} pandoc zip
       fi
     else
       if [ "${centos}" ]
       then
         PKGS="ncurses-devel fftw3-devel libtool automake libcurl-devel \
-              boost-devel readline-devel pandoc zip libmpdclient-devel \
+              boost-devel readline-devel libmpdclient-devel \
               taglib-devel"
         if [ "$1" == "-r" ]
         then
@@ -70,7 +68,7 @@ else
         else
           sudo ${PINS} -y groupinstall "Development Tools"
           sudo ${PINS} -y install gcc-c++
-          sudo ${PINS} -y install ${PKGS}
+          sudo ${PINS} -y install ${PKGS} pandoc zip
         fi
       else
         echo "Unrecognized operating system"
