@@ -159,15 +159,15 @@ sync_music_dir() {
     [ "${use_sys_mpd}" ] || {
       systemctl --user daemon-reload --quiet
       # Enable and activate the MPD user service
-      systemctl --user is-active --quiet mpd.service
+      systemctl --user is-active --quiet mpd.service > /dev/null 2>&1
       if [ $? -eq 0 ]
       then
-        systemctl --user restart --quiet mpd.service
+        systemctl --user restart --quiet mpd.service > /dev/null 2>&1
       else
-        systemctl --user start --quiet mpd.service
+        systemctl --user start --quiet mpd.service > /dev/null 2>&1
       fi
-      systemctl --user is-enabled --quiet mpd.service
-      [ $? -eq 0 ] || systemctl --user enable --quiet mpd.service
+      systemctl --user is-enabled --quiet mpd.service > /dev/null 2>&1
+      [ $? -eq 0 ] || systemctl --user enable --quiet mpd.service > /dev/null 2>&1
       [ "${have_mpc}" ] && mpc update --quiet &
     }
   else
@@ -179,26 +179,26 @@ sync_music_dir() {
 
 get_mpd_status() {
   # First check system-wide MPD service
-  systemctl is-enabled --quiet mpd.service
+  systemctl is-enabled --quiet mpd.service > /dev/null 2>&1
   [ $? -eq 0 ] && senable=1
-  systemctl is-enabled --quiet mpd.socket
+  systemctl is-enabled --quiet mpd.socket > /dev/null 2>&1
   [ $? -eq 0 ] && senable=1
-  systemctl is-active --quiet mpd.service
+  systemctl is-active --quiet mpd.service > /dev/null 2>&1
   [ $? -eq 0 ] && sactive=1
-  systemctl is-active --quiet mpd.socket
+  systemctl is-active --quiet mpd.socket > /dev/null 2>&1
   [ $? -eq 0 ] && sactive=1
   if [ "${sactive}" ] || [ "${senable}" ]
   then
     use_sys_mpd=1
   else
     # Next check user MPD service
-    systemctl --user is-enabled --quiet mpd.service
+    systemctl --user is-enabled --quiet mpd.service > /dev/null 2>&1
     [ $? -eq 0 ] && uenable=1
-    systemctl --user is-enabled --quiet mpd.socket
+    systemctl --user is-enabled --quiet mpd.socket > /dev/null 2>&1
     [ $? -eq 0 ] && uenable=1
-    systemctl --user is-active --quiet mpd.service
+    systemctl --user is-active --quiet mpd.service > /dev/null 2>&1
     [ $? -eq 0 ] && uactive=1
-    systemctl --user is-active --quiet mpd.socket
+    systemctl --user is-active --quiet mpd.socket > /dev/null 2>&1
     [ $? -eq 0 ] && uactive=1
     [ "${uactive}" ] || [ "${uenable}" ] && use_usr_mpd=1
   fi
@@ -463,37 +463,37 @@ install_mpc() {
       done
     }
     [ "${m_enabled}" ] && {
-      systemctl --user disable mopidy.service
+      systemctl --user disable mopidy.service > /dev/null 2>&1
     }
     [ "${m_active}" ] && {
-      systemctl --user stop mopidy.service
+      systemctl --user stop mopidy.service > /dev/null 2>&1
     }
 
     # Reconfigure mpcplus/mppcava with MPD visualizer data source
     [ -x ${MPPSCPTDIR}/viz_data_src.sh ] && ${MPPSCPTDIR}/viz_data_src.sh mpd
 
     systemctl --user is-active mpd.service >/dev/null 2>&1 || {
-      systemctl --user start mpd.service
+      systemctl --user start mpd.service > /dev/null 2>&1
     }
     systemctl --user is-enabled mpd.service >/dev/null 2>&1 || {
-      systemctl --user enable mpd.service
+      systemctl --user enable mpd.service > /dev/null 2>&1
     }
     [ "${have_mpc}" ] && mpc update --quiet &
 
     [ -f ${HOME}/.config/systemd/user/mpdstats.service ] && {
       systemctl --user is-active mpdstats.service >/dev/null 2>&1 || {
-        systemctl --user start mpdstats.service
+        systemctl --user start mpdstats.service > /dev/null 2>&1
       }
       systemctl --user is-enabled mpdstats.service >/dev/null 2>&1 || {
-        systemctl --user enable mpdstats.service
+        systemctl --user enable mpdstats.service > /dev/null 2>&1
       }
     }
     [ -f ${HOME}/.config/systemd/user/yams.service ] && {
       systemctl --user is-active yams.service >/dev/null 2>&1 || {
-        systemctl --user start yams.service
+        systemctl --user start yams.service > /dev/null 2>&1
       }
       systemctl --user is-enabled yams.service >/dev/null 2>&1 || {
-        systemctl --user enable yams.service
+        systemctl --user enable yams.service > /dev/null 2>&1
       }
     }
   else
