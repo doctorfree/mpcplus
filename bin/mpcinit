@@ -168,7 +168,6 @@ sync_music_dir() {
       fi
       systemctl --user is-enabled --quiet mpd.service
       [ $? -eq 0 ] || systemctl --user enable --quiet mpd.service
-      have_mpc=`type -p mpc`
       [ "${have_mpc}" ] && mpc update --quiet &
     }
   else
@@ -433,6 +432,7 @@ install_mpc() {
     rm -rf mpc
     mv mpc$$ mpc
   }
+  have_mpc=`type -p mpc`
 }
 
 [ "${argument}" == "mpd" ] && {
@@ -478,6 +478,8 @@ install_mpc() {
     systemctl --user is-enabled mpd.service >/dev/null 2>&1 || {
       systemctl --user enable mpd.service
     }
+    [ "${have_mpc}" ] && mpc update --quiet &
+
     [ -f ${HOME}/.config/systemd/user/mpdstats.service ] && {
       systemctl --user is-active mpdstats.service >/dev/null 2>&1 || {
         systemctl --user start mpdstats.service
@@ -556,8 +558,8 @@ empty_music=1
   printf "\n/etc/mpd.conf after initialization and run 'mpcinit sync'.\n"
 }
 
+have_mpc=`type -p mpc`
 [ "${centos}" ] && {
-  have_mpc=`type -p mpc`
   [ "${have_mpc}" ] || {
     have_git=`type -p git`
     [ "${have_git}" ] || sudo ${DNF} install git
