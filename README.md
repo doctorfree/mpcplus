@@ -32,7 +32,7 @@ for integration with the
 * new display mode
 * alternative user interface
 * ability to browse and add files from outside of MPD music directory
-* cute trick to add album cover art in character display using tmux
+
 …and a lot more minor functions.
 
 ## Dependencies
@@ -40,14 +40,11 @@ for integration with the
 * boost library [https://www.boost.org/]
 * ncurses library [http://www.gnu.org/software/ncurses/ncurses.html]
 * readline library [https://tiswww.case.edu/php/chet/readline/rltop.html]
-* curl library (optional, required for fetching lyrics and last.fm data) [https://curl.haxx.se/]
-* fftw library (optional, required for frequency spectrum music visualization mode) [http://www.fftw.org/]
-* tag library (optional, required for tag editing) [https://taglib.org/]
+* curl library (required for fetching lyrics and last.fm data) [https://curl.haxx.se/]
+* fftw library (required for frequency spectrum music visualization mode) [http://www.fftw.org/]
+* tag library (required for tag editing) [https://taglib.org/]
 
-For example, on Ubuntu/Debian (boost, ncurses, readline, curl, mpd):
-```
-sudo apt install libboost-all-dev libncurses5-dev libncursesw5-dev libreadline-dev libcurl4-gnutls-dev libmpdclient-dev
-```
+All dependencies are automatically installed if not already present.
 
 ## Requirements
 
@@ -188,70 +185,16 @@ mpcinit
 Examine the generated `mpcplus` configuration in `~/.config/mpcplus/config`
 and `~/.config/mpcplus/bindings` and make any desired changes.
 
-### Fuzzy Finder Configuration
-
-The `fzmp` command lists, searches, and selects media from the MPD
-library using the `fzf` fuzzy finder command line utility. A default
-`fzmp` configuration file for each user is created when the `mpcinit`
-command is executed. The `fzmp` configuration file is located at:
-
-```
-~/.config/mpcplus/fzmp.conf
-```
-
-The initial default `fzmp` configuration should suffice for most use cases.
-Some of the interactive key bindings may need to be modified if they are
-already in use by other utilities. For example, the default key binding to
-switch to playlist view is 'F1' but the `xfce4-terminal` command binds 'F1'
-by default to its help window. In this case either the `fzmp` playlist view
-key binding must be changed or the XFCE4 terminal help window shortcut must
-be disabled.
-
-To disable the XFCE4 terminal help window shortcut, in `xfce4-terminal` select:
-
-*Edit -> Preferences -> Advanced*
-
-Select the *Disable help window shortcut key (F1 by default)* and Close
-the Preferences dialog. The XFCE4 terminal help window shortcut will no
-longer be bound to 'F1' and no modification to the playlist view key binding
-for `fzmp` would be necessary.
-
-To modify the `fzmp` playlist view key binding, edit the `fzmp` configuration
-file `~/.config/mpcplus/fzmp.conf` and add a line like the following:
-
-```
-playlist_view_key F6
-```
-
-This revised configuration would change the playlist view key binding from
-'F1' to 'F6' and the XFCE4 terminal help window shortcut could remain enabled
-and bound to 'F1'.
-
-Several other `fzmp` bindings and options can be configured. See `man fzmp`
-for details.
-
 ## Documentation
 
 All mpcplus commands have manual pages. Execute `man <command-name>`
 to view the manual page for a command.
 
-### README for mpcplus configuration
-- [**config/README.md**](config/README.md) - Overview and details of the mpcplus configuration
-
-### README for mpcplus MPD client
-- [**mpcplus/README.md**](mpcplus/README.md) - Introduction to the mpcplus MPD client
-
-### README for tmuxp configs
-- [**config/tmuxp/README.md**](config/tmuxp/README.md) - How to invoke the mpcplus provided `tmuxp` session configurations
-
 ### Man Pages
 
 - [**mpcinit**](markdown/mpcinit.1.md) : mpcplus initialization
-- [**mppcover**](markdown/mppcover.1.md) : Displays album cover art for currently playing song
-- [**mpcplus-tmux**](markdown/mpcplus-tmux.1.md) : mpcplus in a tmux session
 - [**mpcplus**](markdown/mpcplus.1.md) : mpcplus MPD client
 - [**mpcpluskeys**](markdown/mpcpluskeys.1.md) : Cheat sheet for `mpcplus` MPD client navigation
-- [**fzmp**](markdown/fzmp.1.md) : List and search MPD media using fuzzy find
 - [**artist_to_albumartist**](markdown/artist_to_albumartist.1.md) : Copies the Artist tag to the AlbumArtist tag
 
 ### Usage
@@ -574,14 +517,9 @@ It's not necessary to have C/C++ expertise to contribute to mpcplus
 development. Many of the mpcplus commands are Bash scripts and require
 no compilaton. Script commands reside in the `bin` and `share/scripts`
 directories. To modify a shell script, install mpcplus and edit the
-`bin/<script>` or `share/scripts/<script.sh>` you wish to improve. After making
-your changes simply copy the revised script to `/usr/bin` and test your changes.
-
-Modifying the configuration files is a little more tricky. Configuration
-files generally live in the `config` directory but each has its own installation
-location and some are modified by the `mpcinit` command during installation.
-If you are just modifying the shell scripts or configuration files then
-you don't need to worry about the extensive list of dependencies listed above.
+`bin/<script>` or `share/scripts/<script.sh>` you wish to improve.
+After making your changes simply copy the revised script to `/usr/bin`
+or `/usr/share/mpcplus/scripts` and test your changes.
 
 Feel free to email me at github@ronrecord.com with questions or comments.
 

@@ -76,7 +76,7 @@ Version: ${PKG_VER}-${PKG_REL}
 Section: sound
 Priority: optional
 Architecture: ${ARCH}
-Depends: libboost-all-dev (>= 1.71.0), libcurl4 (>= 7.68.0), libmpdclient2 (>= 2.9), libncursesw6 (>= 6), libreadline8 (>= 6.0), libtag1v5 (>= 1.11), inotify-tools, fzf, mpc, libfftw3-dev, libcurl4-openssl-dev
+Depends: libboost-all-dev (>= 1.71.0), libcurl4 (>= 7.68.0), libmpdclient2 (>= 2.9), libncursesw6 (>= 6), libreadline8 (>= 6.0), libtag1v5 (>= 1.11), mpc, libfftw3-dev, libcurl4-openssl-dev
 Maintainer: ${DEBFULLNAME} <${DEBEMAIL}>
 Installed-Size: 3000
 Build-Depends: debhelper (>= 11)
@@ -132,14 +132,10 @@ ${SUDO} gzip -9 ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/CHANGELOG.md
 
 ${SUDO} cp doc/config ${OUT_DIR}/${DESTDIR}/share/${PKG}
 ${SUDO} cp doc/bindings ${OUT_DIR}/${DESTDIR}/share/${PKG}
-${SUDO} cp config/default_cover.png ${OUT_DIR}/${DESTDIR}/share/${PKG}
-${SUDO} cp config/fzmp.conf ${OUT_DIR}/${DESTDIR}/share/${PKG}
 ${SUDO} cp share/mpcplus-cheat-sheet.txt ${OUT_DIR}/${DESTDIR}/share/${PKG}
 ${SUDO} cp share/mpcplus-cheat-sheet.md ${OUT_DIR}/${DESTDIR}/share/${PKG}
 
 ${SUDO} cp -a share/scripts ${OUT_DIR}/${DESTDIR}/share/${PKG}/scripts
-
-${SUDO} cp -a config/ueberzug ${OUT_DIR}/${DESTDIR}/share/${PKG}/ueberzug
 
 ${SUDO} cp -a man/man1 ${OUT_DIR}/${DESTDIR}/share/man/man1
 ${SUDO} cp -a share/menu "${OUT_DIR}/${DESTDIR}/share/menu"

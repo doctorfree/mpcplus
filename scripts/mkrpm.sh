@@ -85,13 +85,9 @@ ${SUDO} gzip -9 ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/CHANGELOG.md
 
 ${SUDO} cp doc/config ${OUT_DIR}/${DESTDIR}/share/${PKG}
 ${SUDO} cp doc/bindings ${OUT_DIR}/${DESTDIR}/share/${PKG}
-${SUDO} cp config/default_cover.png ${OUT_DIR}/${DESTDIR}/share/${PKG}
-${SUDO} cp config/fzmp.conf ${OUT_DIR}/${DESTDIR}/share/${PKG}
 ${SUDO} cp share/mpcplus-cheat-sheet.txt ${OUT_DIR}/${DESTDIR}/share/${PKG}
 ${SUDO} cp share/mpcplus-cheat-sheet.md ${OUT_DIR}/${DESTDIR}/share/${PKG}
 ${SUDO} cp -a share/scripts ${OUT_DIR}/${DESTDIR}/share/${PKG}/scripts
-
-${SUDO} cp -a config/ueberzug ${OUT_DIR}/${DESTDIR}/share/${PKG}/ueberzug
 
 ${SUDO} cp -a man/man1 ${OUT_DIR}/${DESTDIR}/share/man/man1
 ${SUDO} cp -a share/menu "${OUT_DIR}/${DESTDIR}/share/menu"

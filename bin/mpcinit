@@ -14,8 +14,6 @@ USERCONF=${HOME}/.config
 MPDCONFDIR="${USERCONF}/mpd"
 USRMPDCONF="${MPDCONFDIR}/mpd.conf"
 SYSMPDCONF="/etc/mpd.conf"
-CFGS="default_cover.png fzmp.conf"
-SCPS="album_cover.sh cover_obs.sh"
 
 BOLD=$(tput bold)
 NORM=$(tput sgr0)
@@ -82,17 +80,13 @@ sync_music_dir() {
   set_music_dir
   if [ "${mpd_music}" ]
   then
-    MPC_CONFIGS="config ueberzug/config config-art.conf"
     mpc_music=`grep ^mpd_music_dir ${MPCDIR}/config`
     mpc_music=`echo ${mpc_music} | awk ' { print $3 } '`
     [ "${mpd_music}" == "${mpc_music}" ] || {
-      for mpc_config in ${MPC_CONFIGS}
-      do
-        cat ${MPCDIR}/${mpc_config} | \
-          sed -e "s%^mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" > /tmp/mpc$$
-        cp /tmp/mpc$$ ${MPCDIR}/${mpc_config}
-        rm -f /tmp/mpc$$
-      done
+      cat ${MPCDIR}/config | \
+        sed -e "s%^mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" > /tmp/mpc$$
+      cp /tmp/mpc$$ ${MPCDIR}/config
+      rm -f /tmp/mpc$$
     }
 
     [ "${mpd_bind}" ] && {
@@ -110,26 +104,23 @@ sync_music_dir() {
       }
       mpc_host=`echo ${mpc_host} | awk ' { print $3 } '`
       [ "${mpd_bind}" == "${mpc_host}" ] || {
-        for mpc_config in ${MPC_CONFIGS}
-        do
-          if [ "${comment}" ]
+        if [ "${comment}" ]
+        then
+          cat ${MPCDIR}/config | \
+            sed -e "s%^\#mpd_host.*%mpd_host = ${mpd_bind}%" > /tmp/mpc$$
+          cp /tmp/mpc$$ ${MPCDIR}/config
+          rm -f /tmp/mpc$$
+        else
+          if [ "${append}" ]
           then
-            cat ${MPCDIR}/${mpc_config} | \
-              sed -e "s%^\#mpd_host.*%mpd_host = ${mpd_bind}%" > /tmp/mpc$$
-            cp /tmp/mpc$$ ${MPCDIR}/${mpc_config}
-            rm -f /tmp/mpc$$
+            echo "mpd_host = ${mpd_bind}" >> ${MPCDIR}/config
           else
-            if [ "${append}" ]
-            then
-              echo "mpd_host = ${mpd_bind}" >> ${MPCDIR}/${mpc_config}
-            else
-              cat ${MPCDIR}/${mpc_config} | \
-                sed -e "s%^mpd_host.*%mpd_host = ${mpd_bind}%" > /tmp/mpc$$
-              cp /tmp/mpc$$ ${MPCDIR}/${mpc_config}
-              rm -f /tmp/mpc$$
-            fi
+            cat ${MPCDIR}/config | \
+              sed -e "s%^mpd_host.*%mpd_host = ${mpd_bind}%" > /tmp/mpc$$
+            cp /tmp/mpc$$ ${MPCDIR}/config
+            rm -f /tmp/mpc$$
           fi
-        done
+        fi
       }
     }
     [ "${mpd_port}" ] && {
@@ -147,26 +138,23 @@ sync_music_dir() {
       }
       mpc_port=`echo ${mpc_port} | awk ' { print $3 } '`
       [ "${mpd_port}" == "${mpc_port}" ] || {
-        for mpc_config in ${MPC_CONFIGS}
-        do
-          if [ "${comment}" ]
+        if [ "${comment}" ]
+        then
+          cat ${MPCDIR}/config | \
+            sed -e "s%^\#mpd_port.*%mpd_port = ${mpd_port}%" > /tmp/mpc$$
+          cp /tmp/mpc$$ ${MPCDIR}/config
+          rm -f /tmp/mpc$$
+        else
+          if [ "${append}" ]
           then
-            cat ${MPCDIR}/${mpc_config} | \
-              sed -e "s%^\#mpd_port.*%mpd_port = ${mpd_port}%" > /tmp/mpc$$
-            cp /tmp/mpc$$ ${MPCDIR}/${mpc_config}
-            rm -f /tmp/mpc$$
+            echo "mpd_port = ${mpd_port}" >> ${MPCDIR}/config
           else
-            if [ "${append}" ]
-            then
-              echo "mpd_port = ${mpd_port}" >> ${MPCDIR}/${mpc_config}
-            else
-              cat ${MPCDIR}/${mpc_config} | \
-                sed -e "s%^mpd_port.*%mpd_port = ${mpd_port}%" > /tmp/mpc$$
-              cp /tmp/mpc$$ ${MPCDIR}/${mpc_config}
-              rm -f /tmp/mpc$$
-            fi
+            cat ${MPCDIR}/config | \
+              sed -e "s%^mpd_port.*%mpd_port = ${mpd_port}%" > /tmp/mpc$$
+            cp /tmp/mpc$$ ${MPCDIR}/config
+            rm -f /tmp/mpc$$
           fi
-        done
+        fi
       }
     }
 
@@ -234,6 +222,30 @@ init_warn() {
   printf "${BOLD}mpcinit $1${NORM}\n"
   printf "\nExiting."
   usage
+}
+
+set_python() {
+  PYTHON=""
+  POTENTIAL_BINARIES=( "python" "python3" "python3.6" "python3.5" "python3.7" "python3.4" "python3.3" "python3.8" "python3.2" "python3.1" )
+  PY3_SUPPORT=false
+
+  for i in "${POTENTIAL_BINARIES[@]}"
+  do
+	PYTHON="$i"
+
+	if  $(check_py_version ${PYTHON}) ;
+	then
+		PY3_SUPPORT=true
+		break
+	fi
+  done
+
+  if [ ! ${PY3_SUPPORT} ]
+  then
+	echo "[ERROR] Could not find python3 binary."
+    echo "Please add it to your \$PATH before continuing."
+	exit
+  fi
 }
 
 visit_wiki() {
@@ -322,27 +334,6 @@ shift $(( OPTIND - 1 ))
 
 argument=`echo "$1" | tr '[:upper:]' '[:lower:]'`
 
-PYTHON=""
-POTENTIAL_BINARIES=( "python" "python3" "python3.6" "python3.5" "python3.7" "python3.4" "python3.3" "python3.8" "python3.2" "python3.1" )
-PY3_SUPPORT=false
-
-for i in "${POTENTIAL_BINARIES[@]}"
-do
-	PYTHON="$i"
-
-	if  $(check_py_version ${PYTHON}) ;
-	then
-		PY3_SUPPORT=true
-		break
-	fi
-done
-
-if [ ! ${PY3_SUPPORT} ]
-then
-	echo "[ERROR] Could not find python3 binary, please add it to your \$PATH before continuing"
-	exit
-fi
-
 # User should not be root. Prompt to proceed if root user
 iamroot=
 if [ "${EUID}" ]
@@ -425,14 +416,15 @@ pathadd() {
 
 install_mpc() {
   pathadd "${HOME}/.local/bin"
+  have_meson=`type -p meson`
+  have_ninja=`type -p ninja`
+  [ "${have_meson}" ] && [ "${have_ninja}" ] || set_python
   [ -d ${HOME}/src ] || mkdir -p ${HOME}/src
   cd ${HOME}/src
   [ -d mpc ] && mv mpc mpc$$
   git clone https://github.com/MusicPlayerDaemon/mpc.git
   cd mpc
-  have_meson=`type -p meson`
   [ "${have_meson}" ] || ${PYTHON} -m pip install --user meson
-  have_ninja=`type -p ninja`
   [ "${have_ninja}" ] || ${PYTHON} -m pip install --user ninja
   meson . output
   ninja -C output
@@ -593,14 +585,6 @@ done
   }
 }
 
-pathadd "${HOME}/.fzf/bin"
-have_fzf=`type -p fzf`
-[ "${have_fzf}" ] || {
-  [ -d ${HOME}/.fzf ] && rm -rf ${HOME}/.fzf
-  git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-  ~/.fzf/install --all
-}
-
 [ "${quiet}" ] || {
   printf "\n\tInstalling configuration files in $USERCONF ..."
 }
@@ -611,72 +595,8 @@ else
   cp ${MPCONFDIR}/bindings ${MPCDIR}/bindings
 fi
 
-for cfg in ${CFGS}
-do
-  if [ -f ${MPCDIR}/${cfg} ]
-  then
-    [ "${overwrite}" ] && cp ${MPCONFDIR}/${cfg} ${MPCDIR}/${cfg}
-  else
-    cp ${MPCONFDIR}/${cfg} ${MPCDIR}/${cfg}
-  fi
-  chmod 644 ${MPCDIR}/${cfg}
-done
-for scp in ${SCPS}
-do
-  if [ -f ${MPCDIR}/${scp} ]
-  then
-    [ "${overwrite}" ] && cp ${SCPTDIR}/${scp} ${MPCDIR}/${scp}
-  else
-    cp ${SCPTDIR}/${scp} ${MPCDIR}/${scp}
-  fi
-  chmod 755 ${MPCDIR}/${scp}
-done
-if [ -d "${MPCDIR}/ueberzug" ]
-then
-  for ueb in ${MPCONFDIR}/ueberzug/*
-  do
-    [ "${ueb}" == "${MPCONFDIR}/ueberzug/*" ] && continue
-    b=`basename "${ueb}"`
-    if [ -d "${ueb}" ]
-    then
-      if [ -d ${MPCDIR}/ueberzug/${b} ]
-      then
-        for img in "${ueb}"/*
-        do
-          [ "${img}" == "${ueb}/*" ] && continue
-          i=`basename "${img}"`
-          if [ -f ${MPCDIR}/ueberzug/${b}/${i} ]
-          then
-            [ "${overwrite}" ] && cp ${img} ${MPCDIR}/ueberzug/${b}/${i}
-          else
-            cp ${img} ${MPCDIR}/ueberzug/${b}/${i}
-          fi
-        done
-      else
-        cp -a "${ueb}" ${MPCDIR}/ueberzug/${b}
-      fi
-    else
-      if [ -f ${MPCDIR}/ueberzug/${b} ]
-      then
-        [ "${overwrite}" ] && cp ${ueb} ${MPCDIR}/ueberzug/${b}
-      else
-        cp ${ueb} ${MPCDIR}/ueberzug/${b}
-      fi
-    fi
-  done
-else
-  cp -a ${MPCONFDIR}/ueberzug ${MPCDIR}/ueberzug
-fi
-
 # Integrate previously set ncmpcpp user preferences into mpcplus/config
 [ -x ${SCPTDIR}/set_prev_ncmpcpp.sh ] && ${SCPTDIR}/set_prev_ncmpcpp.sh
-
-cp ${USERCONF}/mpcplus/config ${USERCONF}/mpcplus/config-art.conf
-echo '##### album cover art display #####
-header_visibility = no
-statusbar_visibility = no
-execute_on_song_change = "~/.config/mpcplus/cover_obs.sh"' \
-  >> ${USERCONF}/mpcplus/config-art.conf
 
 [ "${quiet}" ] || {
   printf "\n\tSyncing mpcplus configuration across all configs ..."
@@ -690,7 +610,7 @@ printf "\n${BOLD}mpcplus Initialization Complete${NORM}"
   printf "\n\t${BOLD}Note:${NORM} Configured music library location is empty"
 }
 printf "\n\nMusic library location set to ${BOLD}${mpd_music}${NORM} in:"
-printf "\n\t${MPPCONF}"
-printf "\nModify ${MPPCONF} 'MUSIC_DIR' to change this."
-printf "\nIf 'MUSIC_DIR' is modified, run '${BOLD}mpcinit sync${NORM}'\n"
+printf "\n\t${MPDCONF}"
+printf "\nModify ${MPDCONF} 'music_directory' to change this."
+printf "\nIf 'music_directory' is modified, run '${BOLD}mpcinit sync${NORM}'\n"
 visit_wiki

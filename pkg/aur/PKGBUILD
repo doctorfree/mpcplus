@@ -27,7 +27,7 @@ arch=('x86_64' 'armv7h')
 url="https://github.com/doctorfree/mpcplus"
 license=('MIT')
 
-depends=(boost-libs libcurl-compat libmpdclient ncurses readline taglib inotify-tools fzf mpd mpc python python-pip fftw)
+depends=(boost-libs libcurl-compat libmpdclient ncurses readline taglib mpc python python-pip fftw)
 makedepends=(boost git pandoc zip)
 install=mpcplus.install
 source=("${pkgname}::git+https://github.com/doctorfree/mpcplus.git")
@@ -94,14 +94,10 @@ package() {
 
   cp doc/config ${pkgdir}/${destdir}/share/${pkgname}
   cp doc/bindings ${pkgdir}/${destdir}/share/${pkgname}
-  cp config/default_cover.png ${pkgdir}/${destdir}/share/${pkgname}
-  cp config/fzmp.conf ${pkgdir}/${destdir}/share/${pkgname}
   cp share/mpcplus-cheat-sheet.txt ${pkgdir}/${destdir}/share/${pkgname}
   cp share/mpcplus-cheat-sheet.md ${pkgdir}/${destdir}/share/${pkgname}
 
   cp -a share/scripts ${pkgdir}/${destdir}/share/${pkgname}/scripts
-
-  cp -a config/ueberzug ${pkgdir}/${destdir}/share/${pkgname}/ueberzug
 
   cp -a man/man1 ${pkgdir}/${destdir}/share/man/man1
   cp -a share/menu "${pkgdir}/${destdir}/share/menu"
