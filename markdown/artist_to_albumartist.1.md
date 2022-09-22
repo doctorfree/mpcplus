@@ -6,7 +6,7 @@ footer: artist_to_albumartist 1.0.0
 date: September 21, 2022
 ---
 ## NAME
-artist_to_albumartist - copies Artist tag (if present) to AlbumArtist (if not present) for given mp3/ogg/flac files
+artist_to_albumartist - copies Artist tag to AlbumArtist for given files
 
 ## SYNOPSIS
 **artist_to_albumartist** [--dry-run] files
