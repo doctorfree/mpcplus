@@ -7,6 +7,8 @@ sudo rm -rf dist releases mpcplus
   make distclean
 }
 
+rm -f extras/artist_to_albumartist src/mpcplus
+
 rm -f aclocal.m4 \
     compile \
     config.guess \
