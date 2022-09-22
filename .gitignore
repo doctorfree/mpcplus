@@ -20,6 +20,10 @@ missing
 extras/artist_to_albumartist
 src/mpcplus
 stamp-h1
+dist/*
+releases/*
+tmp/*
+tools/*
 # vim files
 .*.sw[a-z]
 *.un~
