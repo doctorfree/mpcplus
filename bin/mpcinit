@@ -5,9 +5,11 @@
 # Copy and configure default configuration files in $HOME/.config/mpcplus/
 #
 
-MPPCDIR=/usr/share/mpcplus
-MPCONFDIR=${MPPCDIR}/mpcplus
-SCPTDIR=${MPPCDIR}/scripts
+MPCCDIR=/usr/share/mpcplus
+MPPCDIR=/usr/share/musicplayerplus
+MPCONFDIR=${MPCCDIR}/mpcplus
+SCPTDIR=${MPCCDIR}/scripts
+MPPSCPTDIR=${MPPCDIR}/scripts
 USERCONF=${HOME}/.config
 MPDCONFDIR="${USERCONF}/mpd"
 USRMPDCONF="${MPDCONFDIR}/mpd.conf"
@@ -17,59 +19,62 @@ SCPS="album_cover.sh cover_obs.sh"
 
 BOLD=$(tput bold)
 NORM=$(tput sgr0)
-MPC_USER=$(id -un)
 
 mud="music_directory"
-pld="playlist_directory"
-
 mpd_music="~/Music"
 exp_music="${HOME}/Music"
+senable=
+sactive=
+uenable=
+uactive=
+use_sys_mpd=
+use_usr_mpd=
 
 usage() {
-  printf "\nUsage: mpcinit [-a] [-b] [-d] [-e] [-l music_dir] [-o] [-q] [-r]"
-  printf " [-U] [-y] [-u] [bandcamp|import|kitty|metadata|mopidy|mpd|navidrome|"
-  printf "soundcloud|sync|yams]"
+  printf "\nUsage: mpcinit [-o] [-q] [-r] [-U] [-y] [-u] [mpd|sync]"
   printf "\nWhere:"
-  printf "\n\t'-l music_dir' specifies the location of the music library"
   printf "\n\t'-o' indicates overwrite any pre-existing configuration"
   printf "\n\t'-q' indicates quiet execution, no status messages"
   printf "\n\t'-y' indicates answer 'yes' to all and proceed"
   printf "\n\t'-u' displays this usage message and exits\n"
-  printf "\n\t'mpd' activates the MPD music server and deactivates Mopidy"
+  printf "\n\t'mpd' activates the MPD music server"
   printf "\n\t'sync' synchronizes mpcplus configuration across configs"
   printf "\n\n'mpcinit' must be run as the mpcplus user, not root.\n\n"
   exit 1
 }
 
 set_music_dir() {
+  if [ "${use_sys_mpd}" ] && [ "${use_usr_mpd}" ]
+  then
+    # If both system and usr mpd are enabled/active then use the user config
+    MPDCONF="${USRMPDCONF}"
+  else
+    if [ "${use_sys_mpd}" ]
+    then
+      MPDCONF="${SYSMPDCONF}"
+    else
+      MPDCONF="${USRMPDCONF}"
+    fi
+  fi
   mpd_music=
-  set_mpd_conf=
-  set_mpp_conf=
+  mpd_bind=
+  mpd_port=
   # Use MPD config as source of truth
-  [ -f "${MPPCONF}" ] && {
-    mpd_music=`grep ^MUSIC_DIR ${MPPCONF}`
-    mpd_music=`echo ${mpd_music} | awk -F '=' ' { print $2 } ' | sed -e "s/\"//g"`
+  [ -f "${MPDCONF}" ] && {
+    mpd_music=`grep ^${mud} ${MPDCONF}`
+    mpd_music=`echo ${mpd_music} | awk ' { print $2 } ' | sed -e "s/\"//g"`
     # Need to expand the tilda to $HOME
     exp_music="${mpd_music/#\~/$HOME}"
-    set_mpd_conf=1
+
+    mpd_bind=`grep ^bind_to_address ${MPDCONF}`
+    mpd_bind=`echo ${mpd_bind} | awk ' { print $2 } ' | sed -e "s/\"//g"`
+    mpd_port=`grep ^port ${MPDCONF}`
+    mpd_port=`echo ${mpd_port} | awk ' { print $2 } ' | sed -e "s/\"//g"`
   }
-  [ "${mpd_music}" ] || {
-    # If not set in $MPPCONF then look in MPD config
-    [ -f "${MPDCONF}" ] && {
-      mpd_music=`grep ^${mud} ${MPDCONF}`
-      [ "${mpd_music}" ] || mpd_music=`grep \#${mud} ${MPDCONF}`
-      mpd_music=`echo ${mpd_music} | awk ' { print $2 } ' | sed -e "s/\"//g"`
-      # Need to expand the tilda to $HOME
-      exp_music="${mpd_music/#\~/$HOME}"
-      set_mpp_conf=1
-    }
-  }
-  # Why wasn't it set in either config?
+  # Why wasn't it set in config?
   [ "${mpd_music}" ] || {
     mpd_music="~/Music"
     exp_music="${HOME}/Music"
-    set_mpp_conf=1
-    set_mpd_conf=1
   }
 }
 
@@ -77,166 +82,140 @@ sync_music_dir() {
   set_music_dir
   if [ "${mpd_music}" ]
   then
-    # Create mpd_music directory if it does not exist
-    [ -d "${exp_music}" ] || mkdir -p ${exp_music}
-    # Create playlists directory if it does not exist
-    [ -d "${exp_music}/Playlists" ] || mkdir -p "${exp_music}/Playlists"
-    # Sync playlist_directory in mpd.conf
-    mpd_play=`grep ^${pld} ${MPDCONF}`
-    mpd_play=`echo ${mpd_play} | awk ' { print $2 } ' | sed -e "s/\"//g"`
-    [ "${mpd_music}/Playlists" == "${mpd_play}" ] || {
-      playdir="${mpd_music}/Playlists"
-      cat ${MPDCONF} | \
-        sed -e "s%^${pld} .*%${pld}                  \"${playdir}\"%" \
-        > /tmp/mpd$$
-      cp /tmp/mpd$$ ${MPDCONF}
-      rm -f /tmp/mpd$$
-    }
-    [ "${set_mpd_conf}" ] && {
-      [ -f "${MPDCONF}" ] && {
-        # Sync music_directory in mpd.conf
-        mpd_currm=`grep ^${mud} ${MPDCONF}`
-        [ "${mpd_currm}" ] || mpd_currm=`grep \#${mud} ${MPDCONF}`
-        mpd_currm=`echo ${mpd_currm} | awk ' { print $2 } ' | sed -e "s/\"//g"`
-        [ "${mpd_music}" == "${mpd_currm}" ] || {
-          cat ${MPDCONF} | \
-            sed -e "s%^${mud} .*%${mud}                     \"${mpd_music}\"%" \
-            > /tmp/mpd$$
-          cp /tmp/mpd$$ ${MPDCONF}
-          rm -f /tmp/mpd$$
-        }
-      }
-    }
-    [ "${set_mpp_conf}" ] && {
-      if [ -f "${MPPCONF}" ]
-      then
-        # Sync music_directory in $HOME/.config/mpprc
-        mpp_currm=`grep ^MUSIC_DIR ${MPPCONF}`
-        mpp_currm=`echo ${mpp_currm} | awk -F '=' ' { print $2 } ' | sed -e "s/\"//g"`
-        [ "${exp_music}" == "${mpp_currm}" ] || {
-          cat ${MPPCONF} | \
-            sed -e "s%^MUSIC_DIR=.*%MUSIC_DIR=\"${exp_music}\"%" \
-            > /tmp/mpp$$
-          cp /tmp/mpp$$ ${MPPCONF}
-          chmod 600 ${MPPCONF}
-          rm -f /tmp/mpp$$
-        }
-      else
-        init_mpp_conf
-      fi
-    }
-    mpc_custom=1
-    mpc_music=`grep ^mpd_music_dir ${HOME}/${MPCDIR}/config`
-    [ "${mpc_music}" ] || {
-      mpc_music=`grep \#mpd_music_dir ${HOME}/${MPCDIR}/config`
-      mpc_custom=
-    }
+    MPC_CONFIGS="config ueberzug/config config-art.conf"
+    mpc_music=`grep ^mpd_music_dir ${MPCDIR}/config`
     mpc_music=`echo ${mpc_music} | awk ' { print $3 } '`
     [ "${mpd_music}" == "${mpc_music}" ] || {
-      if [ "${mpc_custom}" ]
-      then
-        cat ${HOME}/${MPCDIR}/config | sed -e "s%^mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" > /tmp/mpc$$
-      else
-        cat ${HOME}/${MPCDIR}/config | sed -e "s%#mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" > /tmp/mpc$$
-      fi
-      cp /tmp/mpc$$ ${HOME}/${MPCDIR}/config
-      rm -f /tmp/mpc$$
-      cat ${HOME}/${MPCDIR}/ueberzug/config | sed -e "s%^mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" > /tmp/ueb$$
-      cp /tmp/ueb$$ ${HOME}/${MPCDIR}/ueberzug/config
-      rm -f /tmp/ueb$$
-      cat ${HOME}/${MPCDIR}/config-art.conf | sed -e "s%^mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" > /tmp/art$$
-      cp /tmp/art$$ ${HOME}/${MPCDIR}/config-art.conf
-      rm -f /tmp/art$$
+      for mpc_config in ${MPC_CONFIGS}
+      do
+        cat ${MPCDIR}/${mpc_config} | \
+          sed -e "s%^mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" > /tmp/mpc$$
+        cp /tmp/mpc$$ ${MPCDIR}/${mpc_config}
+        rm -f /tmp/mpc$$
+      done
     }
-    bts_custom=1
-    bts_music=`grep ^directory: ${BEETSCONF}`
-    [ "${bts_music}" ] || {
-      bts_music=`grep \#directory: ${BEETSCONF}`
-      bts_custom=
-    }
-    bts_music=`echo ${bts_music} | awk ' { print $2 } '`
-    [ "${mpd_music}" == "${bts_music}" ] || {
-      if [ "${bts_custom}" ]
-      then
-        cat ${BEETSCONF} | \
-          sed -e "s%^directory:.*%directory: ${mpd_music}%" \
-              -e "s%playlist_dir:.*%playlist_dir: ${mpd_music}/Playlists%" \
-              -e "s%relative_to:.*%relative_to: ${mpd_music}%" > /tmp/bts$$
-      else
-        cat ${BEETSCONF} | \
-          sed -e "s%#directory:.*%directory: ${mpd_music}%" \
-              -e "s%playlist_dir:.*%playlist_dir: ${mpd_music}/Playlists%" \
-              -e "s%relative_to:.*%relative_to: ${mpd_music}%" > /tmp/bts$$
-      fi
-      cp /tmp/bts$$ ${BEETSCONF}
-      rm -f /tmp/bts$$
-    }
-    # Sync music dir in mopidy.conf
-    mop_music=`grep ^base_dir ${MOPIDCONF}`
-    mop_music=`echo ${mop_music} | awk ' { print $3 } '`
-    [ "${mpd_music}" == "${mop_music}" ] || {
-      cat ${MOPIDCONF} | \
-        sed -e "s%^base_dir = .*%base_dir = ${mpd_music}%" \
-            -e "s%^base_dirs = .*%base_dirs = ${mpd_music}%" \
-            -e "s%^playlists_dir = .*%playlists_dir = ${mpd_music}/Playlists%" \
-            -e "s%^media_dirs = .*%media_dir = ${mpd_music}%" \
-            -e "s%^media_dir = .*%media_dir = ${mpd_music}%" > /tmp/mop$$
-      cp /tmp/mop$$ ${MOPIDCONF}
-      rm -f /tmp/mop$$
-    }
-    # Sync music dir in navidrome.toml
-    [ -f "${NAVIDCONF}" ] && {
-      nav_music=`grep ^MusicFolder ${NAVIDCONF}`
-      nav_music=`echo ${nav_music} | awk ' { print $3 } '`
-      nav_music=`echo ${nav_music} | awk ' { print $3 } ' | sed -e "s/\"//g"`
-      [ "${exp_music}" == "${nav_music}" ] || {
-        cat ${NAVIDCONF} | \
-          sed -e "s%^MusicFolder = .*%MusicFolder = \"${exp_music}\"%" > /tmp/nav$$
-        cp /tmp/nav$$ ${NAVIDCONF}
-        rm -f /tmp/nav$$
+
+    [ "${mpd_bind}" ] && {
+      append=
+      comment=
+      mpc_host=`grep ^mpd_host ${MPCDIR}/config`
+      [ "${mpc_host}" ] || {
+        mpc_host=`grep ^#mpd_host ${MPCDIR}/config`
+        if [ "${mpc_host}" ]
+        then
+          comment=1
+        else
+          append=1
+        fi
+      }
+      mpc_host=`echo ${mpc_host} | awk ' { print $3 } '`
+      [ "${mpd_bind}" == "${mpc_host}" ] || {
+        for mpc_config in ${MPC_CONFIGS}
+        do
+          if [ "${comment}" ]
+          then
+            cat ${MPCDIR}/${mpc_config} | \
+              sed -e "s%^\#mpd_host.*%mpd_host = ${mpd_bind}%" > /tmp/mpc$$
+            cp /tmp/mpc$$ ${MPCDIR}/${mpc_config}
+            rm -f /tmp/mpc$$
+          else
+            if [ "${append}" ]
+            then
+              echo "mpd_host = ${mpd_bind}" >> ${MPCDIR}/${mpc_config}
+            else
+              cat ${MPCDIR}/${mpc_config} | \
+                sed -e "s%^mpd_host.*%mpd_host = ${mpd_bind}%" > /tmp/mpc$$
+              cp /tmp/mpc$$ ${MPCDIR}/${mpc_config}
+              rm -f /tmp/mpc$$
+            fi
+          fi
+        done
       }
     }
-    # Sync music dir in yt-dlp.conf
-    ytd_music=`grep ^-o ${YTDLPCONF} | grep /Downloads/`
-    ytd_music=`echo ${ytd_music} | \
-        awk ' { print $2 } ' | \
-        sed -e "s%/Downloads/.*$%%"`
-    [ "${mpd_music}" == "${ytd_music}" ] || {
-      cat ${YTDLPCONF} | \
-        sed -e "s%^-o .*/Downloads/%-o ${mpd_music}/Downloads/%" > /tmp/ytd$$
-      cp /tmp/ytd$$ ${YTDLPCONF}
-      rm -f /tmp/ytd$$
+    [ "${mpd_port}" ] && {
+      append=
+      comment=
+      mpc_port=`grep ^mpd_port ${MPCDIR}/config`
+      [ "${mpc_port}" ] || {
+        mpc_port=`grep ^#mpd_port ${MPCDIR}/config`
+        if [ "${mpc_port}" ]
+        then
+          comment=1
+        else
+          append=1
+        fi
+      }
+      mpc_port=`echo ${mpc_port} | awk ' { print $3 } '`
+      [ "${mpd_port}" == "${mpc_port}" ] || {
+        for mpc_config in ${MPC_CONFIGS}
+        do
+          if [ "${comment}" ]
+          then
+            cat ${MPCDIR}/${mpc_config} | \
+              sed -e "s%^\#mpd_port.*%mpd_port = ${mpd_port}%" > /tmp/mpc$$
+            cp /tmp/mpc$$ ${MPCDIR}/${mpc_config}
+            rm -f /tmp/mpc$$
+          else
+            if [ "${append}" ]
+            then
+              echo "mpd_port = ${mpd_port}" >> ${MPCDIR}/${mpc_config}
+            else
+              cat ${MPCDIR}/${mpc_config} | \
+                sed -e "s%^mpd_port.*%mpd_port = ${mpd_port}%" > /tmp/mpc$$
+              cp /tmp/mpc$$ ${MPCDIR}/${mpc_config}
+              rm -f /tmp/mpc$$
+            fi
+          fi
+        done
+      }
     }
 
-    systemctl --user daemon-reload --quiet
-    # Enable and activate the MPD user service
-    systemctl --user is-active --quiet mpd.service
-    if [ $? -eq 0 ]
-    then
-      systemctl --user restart --quiet mpd.service
-    else
-      systemctl --user start --quiet mpd.service
-    fi
-    systemctl --user is-enabled --quiet mpd.service
-    [ $? -eq 0 ] || systemctl --user enable --quiet mpd.service
-    have_mpc=`type -p mpc`
-    [ "${have_mpc}" ] && mpc update --quiet &
-
-    # Enable and activate the MPDstats user service
-    systemctl --user is-active --quiet mpdstats.service
-    [ $? -eq 0 ] || systemctl --user start --quiet mpdstats.service
-    systemctl --user is-enabled --quiet mpdstats.service
-    [ $? -eq 0 ] || systemctl --user enable --quiet mpdstats.service
-
-    # Enable and activate the Beets web plugin user service
-    systemctl --user is-active --quiet webplugin.service
-    [ $? -eq 0 ] || systemctl --user start --quiet webplugin.service
-    systemctl --user is-enabled --quiet webplugin.service
-    [ $? -eq 0 ] || systemctl --user enable --quiet webplugin.service
+    [ "${use_sys_mpd}" ] || {
+      systemctl --user daemon-reload --quiet
+      # Enable and activate the MPD user service
+      systemctl --user is-active --quiet mpd.service
+      if [ $? -eq 0 ]
+      then
+        systemctl --user restart --quiet mpd.service
+      else
+        systemctl --user start --quiet mpd.service
+      fi
+      systemctl --user is-enabled --quiet mpd.service
+      [ $? -eq 0 ] || systemctl --user enable --quiet mpd.service
+      have_mpc=`type -p mpc`
+      [ "${have_mpc}" ] && mpc update --quiet &
+    }
   else
     echo "WARNING:"
     echo "Could not detect any music_directory setting in ${MPDCONF}"
-    echo "Manual configuration of ${MPPCONF} or ${MPDCONF} required"
+    echo "Manual configuration of ${SYSMPDCONF} or ${USRMPDCONF} required"
+  fi
+}
+
+get_mpd_status() {
+  # First check system-wide MPD service
+  systemctl is-enabled --quiet mpd.service
+  [ $? -eq 0 ] && senable=1
+  systemctl is-enabled --quiet mpd.socket
+  [ $? -eq 0 ] && senable=1
+  systemctl is-active --quiet mpd.service
+  [ $? -eq 0 ] && sactive=1
+  systemctl is-active --quiet mpd.socket
+  [ $? -eq 0 ] && sactive=1
+  if [ "${sactive}" ] || [ "${senable}" ]
+  then
+    use_sys_mpd=1
+  else
+    # Next check user MPD service
+    systemctl --user is-enabled --quiet mpd.service
+    [ $? -eq 0 ] && uenable=1
+    systemctl --user is-enabled --quiet mpd.socket
+    [ $? -eq 0 ] && uenable=1
+    systemctl --user is-active --quiet mpd.service
+    [ $? -eq 0 ] && uactive=1
+    systemctl --user is-active --quiet mpd.socket
+    [ $? -eq 0 ] && uactive=1
+    [ "${uactive}" ] || [ "${uenable}" ] && use_usr_mpd=1
   fi
 }
 
@@ -317,12 +296,8 @@ DNF=
   fi
 }
 
-MUSIC_DIRECTORY=
-while getopts "l:oqrUyu" flag; do
+while getopts "oqrUyu" flag; do
     case $flag in
-        l)
-            MUSIC_DIRECTORY="${OPTARG}"
-            ;;
         o)
             overwrite=1
             ;;
@@ -410,20 +385,22 @@ fi
     exit 1
 }
 
+get_mpd_status
+
 [ -d ${USERCONF} ] || mkdir ${USERCONF}
 if [ -f ${USERCONF}/mpcplus/config ]
 then
-  MPCDIR=".config/mpcplus"
+  MPCDIR="${USERCONF}/mpcplus"
   initialized=1
 else
   if [ -f ${HOME}/.mpcplus/config ]
   then
-    MPCDIR=".mpcplus"
+    MPCDIR="${HOME}/.mpcplus"
     initialized=1
   else
     [ -d ${USERCONF}/mpcplus ] || mkdir -p ${USERCONF}/mpcplus
     cp ${MPCONFDIR}/config ${USERCONF}/mpcplus/config
-    MPCDIR=".config/mpcplus"
+    MPCDIR="${USERCONF}/mpcplus"
     initialized=
   fi
 fi
@@ -502,7 +479,7 @@ install_mpc() {
     }
 
     # Reconfigure mpcplus/mppcava with MPD visualizer data source
-    [ -x ${SCPTDIR}/viz_data_src.sh ] && ${SCPTDIR}/viz_data_src.sh mpd
+    [ -x ${MPPSCPTDIR}/viz_data_src.sh ] && ${MPPSCPTDIR}/viz_data_src.sh mpd
 
     systemctl --user is-active mpd.service >/dev/null 2>&1 || {
       systemctl --user start mpd.service
@@ -570,30 +547,18 @@ printf "\nInitializing mpcplus, please wait ..."
 
 # Check if default music library location is empty
 empty_music=1
-if [ "${MUSIC_DIRECTORY}" ]
-then
-  for mdir in ${MUSIC_DIRECTORY}/*
+for msub in Music music
+do
+  for mdir in ${HOME}/${msub}/*
   do
-    [ "${mdir}" == "${MUSIC_DIRECTORY}/*" ] && continue
-    [ "${mdir}" == "${MUSIC_DIRECTORY}/Playlists" ] && continue
+    [ "${mdir}" == "${HOME}/${msub}/*" ] && continue
+    [ "${mdir}" == "${HOME}/${msub}/Playlists" ] && continue
     empty_music=
-    break
+    break 2
   done
-else
-  for msub in Music music
-  do
-    for mdir in ${HOME}/${msub}/*
-    do
-      [ "${mdir}" == "${HOME}/${msub}/*" ] && continue
-      [ "${mdir}" == "${HOME}/${msub}/Playlists" ] && continue
-      MUSIC_DIRECTORY="${HOME}/${msub}"
-      empty_music=
-      break 2
-    done
-  done
-fi
+done
 
-[ "${MUSIC_DIRECTORY}" ] || {
+[ "${empty_music}" ] && {
   [ -f ${USERCONF}/user-dirs.dirs ] && {
     # Try XDG_MUSIC_DIR
     have_xdg=`type -p xdg-user-dir`
@@ -604,32 +569,19 @@ fi
         do
           [ "${mdir}" == "${xdgm}/*" ] && continue
           [ "${mdir}" == "${xdgm}/Playlists" ] && continue
-          MUSIC_DIRECTORY="${xdgm}"
+          empty_music=
         done
       }
     }
   }
 }
 
-[ "${MUSIC_DIRECTORY}" ] || {
-  empty_music=1
-  if [ -d ${HOME}/Music ]
-  then
-    MUSIC_DIRECTORY="${HOME}/Music"
-  else
-    if [ -d ${HOME}/music ]
-    then
-      MUSIC_DIRECTORY="${HOME}/music"
-    else
-      MUSIC_DIRECTORY="${HOME}/Music"
-    fi
-  fi
+[ "${empty_music}" ] && {
   printf "\n\n${BOLD}Default music library locations appear empty${NORM}"
   printf "\nmpcplus initialization will continue with an empty library."
   printf "\nThe music library can be populated later or, if your music library"
   printf "\nis in a custom location, simply edit $HOME/.config/mpd/mpd.conf"
   printf "\nafter initialization completes and run 'mpcinit sync'.\n"
-  printf "\n${MUSIC_DIRECTORY} will be used as the default library location.\n"
 }
 
 [ "${centos}" ] && {
@@ -652,34 +604,34 @@ have_fzf=`type -p fzf`
 [ "${quiet}" ] || {
   printf "\n\tInstalling configuration files in $USERCONF ..."
 }
-if [ -f ${HOME}/${MPCDIR}/bindings ]
+if [ -f ${MPCDIR}/bindings ]
 then
-  [ "${overwrite}" ] && cp ${MPCONFDIR}/bindings ${HOME}/${MPCDIR}/bindings
+  [ "${overwrite}" ] && cp ${MPCONFDIR}/bindings ${MPCDIR}/bindings
 else
-  cp ${MPCONFDIR}/bindings ${HOME}/${MPCDIR}/bindings
+  cp ${MPCONFDIR}/bindings ${MPCDIR}/bindings
 fi
 
 for cfg in ${CFGS}
 do
-  if [ -f ${HOME}/${MPCDIR}/${cfg} ]
+  if [ -f ${MPCDIR}/${cfg} ]
   then
-    [ "${overwrite}" ] && cp ${MPCONFDIR}/${cfg} ${HOME}/${MPCDIR}/${cfg}
+    [ "${overwrite}" ] && cp ${MPCONFDIR}/${cfg} ${MPCDIR}/${cfg}
   else
-    cp ${MPCONFDIR}/${cfg} ${HOME}/${MPCDIR}/${cfg}
+    cp ${MPCONFDIR}/${cfg} ${MPCDIR}/${cfg}
   fi
-  chmod 644 ${HOME}/${MPCDIR}/${cfg}
+  chmod 644 ${MPCDIR}/${cfg}
 done
 for scp in ${SCPS}
 do
-  if [ -f ${HOME}/${MPCDIR}/${scp} ]
+  if [ -f ${MPCDIR}/${scp} ]
   then
-    [ "${overwrite}" ] && cp ${SCPTDIR}/${scp} ${HOME}/${MPCDIR}/${scp}
+    [ "${overwrite}" ] && cp ${SCPTDIR}/${scp} ${MPCDIR}/${scp}
   else
-    cp ${SCPTDIR}/${scp} ${HOME}/${MPCDIR}/${scp}
+    cp ${SCPTDIR}/${scp} ${MPCDIR}/${scp}
   fi
-  chmod 755 ${HOME}/${MPCDIR}/${scp}
+  chmod 755 ${MPCDIR}/${scp}
 done
-if [ -d "${HOME}/${MPCDIR}/ueberzug" ]
+if [ -d "${MPCDIR}/ueberzug" ]
 then
   for ueb in ${MPCONFDIR}/ueberzug/*
   do
@@ -687,56 +639,34 @@ then
     b=`basename "${ueb}"`
     if [ -d "${ueb}" ]
     then
-      if [ -d ${HOME}/${MPCDIR}/ueberzug/${b} ]
+      if [ -d ${MPCDIR}/ueberzug/${b} ]
       then
         for img in "${ueb}"/*
         do
           [ "${img}" == "${ueb}/*" ] && continue
           i=`basename "${img}"`
-          if [ -f ${HOME}/${MPCDIR}/ueberzug/${b}/${i} ]
+          if [ -f ${MPCDIR}/ueberzug/${b}/${i} ]
           then
-            [ "${overwrite}" ] && cp ${img} ${HOME}/${MPCDIR}/ueberzug/${b}/${i}
+            [ "${overwrite}" ] && cp ${img} ${MPCDIR}/ueberzug/${b}/${i}
           else
-            cp ${img} ${HOME}/${MPCDIR}/ueberzug/${b}/${i}
+            cp ${img} ${MPCDIR}/ueberzug/${b}/${i}
           fi
         done
       else
-        cp -a "${ueb}" ${HOME}/${MPCDIR}/ueberzug/${b}
+        cp -a "${ueb}" ${MPCDIR}/ueberzug/${b}
       fi
     else
-      if [ -f ${HOME}/${MPCDIR}/ueberzug/${b} ]
+      if [ -f ${MPCDIR}/ueberzug/${b} ]
       then
-        [ "${overwrite}" ] && cp ${ueb} ${HOME}/${MPCDIR}/ueberzug/${b}
+        [ "${overwrite}" ] && cp ${ueb} ${MPCDIR}/ueberzug/${b}
       else
-        cp ${ueb} ${HOME}/${MPCDIR}/ueberzug/${b}
+        cp ${ueb} ${MPCDIR}/ueberzug/${b}
       fi
     fi
   done
 else
-  cp -a ${MPCONFDIR}/ueberzug ${HOME}/${MPCDIR}/ueberzug
+  cp -a ${MPCONFDIR}/ueberzug ${MPCDIR}/ueberzug
 fi
-
-[ "${quiet}" ] || {
-  printf "\n\tInstalling MPD configuration in ${MPDCONFDIR} ..."
-}
-# If there is no user MPD config
-# then copy the mpcplus MPD config folder
-# into the user's home and setup user MPD service
-if [ -f ${MPDCONF} ]
-then
-  [ "${overwrite}" ] && cp ${MPPCDIR}/mpd/mpd.conf ${MPDCONF}
-else
-  if [ -d ${MPDCONFDIR} ]
-  then
-    cp ${MPPCDIR}/mpd/mpd.conf ${MPDCONF}
-  else
-    cp -a ${MPPCDIR}/mpd ${MPDCONFDIR}
-  fi
-fi
-
-SYSTEMDIR="${USERCONF}/systemd/user"
-
-have_git=`type -p git`
 
 # Integrate previously set ncmpcpp user preferences into mpcplus/config
 [ -x ${SCPTDIR}/set_prev_ncmpcpp.sh ] && ${SCPTDIR}/set_prev_ncmpcpp.sh
