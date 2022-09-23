@@ -8,7 +8,7 @@ pkgrel=1
 pkgdesc="NCurses character based MPD client"
 arch=('x86_64' 'armv7h')
 url="https://github.com/doctorfree/mpcplus"
-license=('MIT')
+license=('GPL2')
 
 depends=(boost-libs libcurl-compat libmpdclient ncurses readline taglib mpc python python-pip fftw)
 makedepends=(boost git pandoc zip)
