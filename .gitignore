@@ -21,6 +21,10 @@ extras/artist_to_albumartist
 src/mpcplus
 stamp-h1
 dist/*
+pkg/releases/arch/*
+pkg/releases/centos/*
+pkg/releases/fedora/*
+pkg/releases/rpi/*
 releases/*
 tmp/*
 tools/*
