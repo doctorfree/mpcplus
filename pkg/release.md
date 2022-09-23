@@ -1,8 +1,12 @@
 [Mpcplus](https://github.com/doctorfree/mpcplus#readme) is an open source NCurses character-based Music Player Daemon (MPD) client inspired by `ncmpcpp`. The `mpcplus` MPD client is customized for integration with the [MusicPlayerPlus project](https://github.com/doctorfree/MusicPlayerPlus#readme) and the [Mppcava spectrum visualizer](https://github.com/doctorfree/mppcava#readme).
 
-This major new release of mpcplus adds support for many new features including:
+**[Important Note:]** This initial release of the `mpcplus` package is intended to serve as a test release for future integration with `MusicPlayerPlus`. Although it is a fully featured `mpcplus`, MusicPlayerPlus integration is still in development and will not be available until MusicPlayerPlus version 3 is released. To get the fully integrated features of `mpcplus` at this time, install [MusicPlayerPlus version 2](https://github.com/doctorfree/MusicPlayerPlus/releases) rather than this package.
 
-* Integration of the [Beets media library management system](https://beets.io/)
+This release of mpcplus adds support for:
+
+* Installation as a separate standalone package on multiple platforms
+* Create packaging for Arch Linux, CentOS, Fedora, Ubuntu, and Raspberry Pi OS
+* Integrated features and customizations from MusicPlayerPlus
 
 ## Installation
 
@@ -52,11 +56,9 @@ makepkg --force --log --cleanbuild --noconfirm --syncdeps
 
 ## Configuration
 
-**[TODO:]** Instructions on how to configure MPD fifo and music_directory etc
+**[TODO:]** Instructions on how to configure MPD fifo
 
-If the music library is located somewhere other than `$HOME/Music` or `$HOME/music` then rather than `mppinit`, execute the command `mppinit -l /path/to/library`.
-
-If the `mppinit` mpcplus initialization did not correctly detect the music library location then edit `~/.config/mpprc`, set the `MUSIC_DIR` correctly, and run `mppinit sync`.
+If the `mpcinit` mpcplus initialization did not correctly detect the music library location then edit `/etc/mpd.conf` or `~/.config/mpd/mpd.conf`, set the `music_directory` correctly, and run `mpcinit sync`.
 
 See the [mpcplus README](https://github.com/doctorfree/mpcplus#readme) for additional configuration info.
 
@@ -103,7 +105,8 @@ The `mkpkg` script detects the platform and creates an installable package in th
 
 Changes in version 1.0.0 release 1 include:
 
-* Arch Linux build and packaging support
-* CentOS Linux build and packaging support
+* Installation as a separate standalone package on multiple platforms
+* Integrated features and customizations from MusicPlayerPlus
+* Create packaging for Arch Linux, CentOS, Fedora, Ubuntu, and Raspberry Pi OS
 
 See [CHANGELOG.md](https://github.com/doctorfree/mpcplus/blob/master/CHANGELOG.md) for a full list of changes in every mpcplus release

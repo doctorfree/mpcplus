@@ -3,6 +3,7 @@
 # mpcplus-1.0.0 (2022-09-21)
 * Forked as separate standalone project
 * Integrated features and customizations from MusicPlayerPlus
+* Create packaging for Arch Linux, CentOS, Fedora, Ubuntu, and Raspberry Pi OS
 
 # mpcplus-0.10 (2022-03-26)
 * Integrated into MusicPlayerPlus project
