@@ -78,7 +78,7 @@ Priority: optional
 Architecture: ${ARCH}
 Depends: libboost-all-dev (>= 1.71.0), libcurl4 (>= 7.68.0), libmpdclient2 (>= 2.9), libncursesw6 (>= 6), libreadline8 (>= 6.0), libtag1v5 (>= 1.11), mpc, libfftw3-dev, libcurl4-openssl-dev
 Maintainer: ${DEBFULLNAME} <${DEBEMAIL}>
-Installed-Size: 3000
+Installed-Size: 53000
 Build-Depends: debhelper (>= 11)
 Provides: mpcplus-completion, mpd-client
 Suggests: desktop-file-utils
