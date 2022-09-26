@@ -2,7 +2,6 @@ Name: mpcplus
 Version:    %{_version}
 Release:    %{_release}%{?dist}
 BuildArch:  x86_64
-AutoReqProv: no
 %if 0%{?centos} > 0
 Requires: boost, fftw-libs, libcurl, libmpdclient, ncurses, readline, taglib
 %else

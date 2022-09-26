@@ -1,6 +1,10 @@
 #!/bin/bash
 
 sudo rm -rf dist releases mpcplus
+sudo rm -rf pkg/dist/arch
+sudo rm -rf pkg/dist/centos
+sudo rm -rf pkg/dist/fedora
+sudo rm -rf pkg/dist/rpi
 
 [ -f Makefile ] && {
   make clean
