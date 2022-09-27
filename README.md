@@ -1,5 +1,7 @@
 ## Mpcplus – featureful NCurses based MPD client
 
+[![License: GPL v2](https://img.shields.io/badge/License-GPL_v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
+
 The `mpcplus` NCurses MPD client is derived from `ncmpcpp` and customized
 for integration with
 [MusicPlayerPlus](https://github.com/doctorfree/MusicPlayerPlus).
