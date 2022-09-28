@@ -407,7 +407,7 @@ media_library_hide_album_dates = yes
 #
 #default_tag_editor_pattern = %n - %t
 #
-header_visibility = no
+header_visibility = yes
 #
 statusbar_visibility = yes
 #
@@ -564,7 +564,6 @@ external_editor = vim
 #
 ## Note: set to yes if external editor is a console application.
 ##
-#use_console_editor = yes
 use_console_editor = yes
 #
 ##### colors definitions #####
