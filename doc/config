@@ -1,8 +1,7 @@
-##############################################################
-## This is an example configuration file. Copy it to        ##
-## $XDG_CONFIG_HOME/mpcplus/config or $HOME/.mpcplus/config ##
-## and set up your preferences.                             ##
-##############################################################
+###################################################################
+## This is the mpcplus configuration file. To modify the default ##
+## preferences, edit $HOME/.config/mpcplus/config.               ##
+###################################################################
 #
 ##### directories ######
 ##
