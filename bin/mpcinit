@@ -289,7 +289,7 @@ DNF=
     fi
   fi
 }
-[ "${ID}" == "arch" ] && arch=1
+[ "${ID}" == "arch" ] || [ "${ID_LIKE}" == "arch" ] && arch=1
 [ "${ID}" == "centos" ] && centos=1
 [ "${ID}" == "fedora" ] && fedora=1
 

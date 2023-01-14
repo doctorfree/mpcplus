@@ -1,5 +1,8 @@
 # Changelog
 
+# mpcplus-1.0.0 release 2 (2023-01-15)
+* Add support for Arch-like systems (e.g. Manjaro Linux)
+
 # mpcplus-1.0.0 (2022-09-21)
 * Forked as separate standalone project
 * Integrated features and customizations from MusicPlayerPlus

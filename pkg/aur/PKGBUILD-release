@@ -3,7 +3,7 @@
 pkgname=mpcplus
 pkgver=v${VERSION}r${RELEASE}
 pkgrel=${PACKAGE}
-pkgver=v1.0.0r1
+pkgver=v1.0.0r2
 pkgrel=1
 pkgdesc="NCurses character based MPD client"
 arch=('x86_64' 'armv7h')

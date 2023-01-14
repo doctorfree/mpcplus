@@ -7,6 +7,7 @@ This release of mpcplus adds support for:
 * Installation as a separate standalone package on multiple platforms
 * Create packaging for Arch Linux, CentOS, Fedora, Ubuntu, and Raspberry Pi OS
 * Integrated features and customizations from MusicPlayerPlus
+* Support for Arch-like systems (e.g. Manjaro Linux)
 
 ## Installation
 
@@ -15,19 +16,19 @@ Download the [latest Debian, Arch, or RPM package format release](https://github
 Install the package on Debian based systems by executing the command:
 
 ```bash
-sudo apt install ./mpcplus_1.0.0-1.amd64.deb
+sudo apt install ./mpcplus_1.0.0-2.amd64.deb
 ```
 
 or, on a Raspberry Pi:
 
 ```bash
-sudo apt install ./mpcplus_1.0.0-1.armhf.deb
+sudo apt install ./mpcplus_1.0.0-2.armhf.deb
 ```
 
 Install the package on Arch Linux based systems by executing the command:
 
 ```bash
-sudo pacman -U ./mpcplus_1.0.0-1-x86_64.pkg.tar.zst
+sudo pacman -U ./mpcplus_1.0.0-2-x86_64.pkg.tar.zst
 ```
 
 Install the package on RPM based systems by executing one of the following commands.
@@ -35,21 +36,21 @@ Install the package on RPM based systems by executing one of the following comma
 On Fedora Linux:
 
 ```bash
-sudo yum localinstall ./mpcplus_1.0.0-1.fc36.x86_64.rpm
+sudo yum localinstall ./mpcplus_1.0.0-2.fc36.x86_64.rpm
 ```
 
 On CentOS Linux:
 
 ```bash
-sudo yum localinstall ./mpcplus_1.0.0-1.el8.x86_64.rpm
+sudo yum localinstall ./mpcplus_1.0.0-2.el8.x86_64.rpm
 ```
 
 ### PKGBUILD Installation
 
-To install on a Raspberry Pi running Arch Linux, mpcplus must be built from sources using the Arch PKGBUILD files provided in `mpcplus-pkgbuild-1.0.0-1.tar.gz`. This process can be performed on any `x86_64` or `armv7h ` architecture system running Arch Linux. An `x86_64` architecture precompiled package is supplied (see above). To rebuild this package from sources, extract `mpcplus-pkgbuild-1.0.0-1.tar.gz` and use the `makepkg` command to download the sources, build the binaries, and create the installation package:
+To install on a Raspberry Pi running Arch Linux, mpcplus must be built from sources using the Arch PKGBUILD files provided in `mpcplus-pkgbuild-1.0.0-2.tar.gz`. This process can be performed on any `x86_64` or `armv7h ` architecture system running Arch Linux. An `x86_64` architecture precompiled package is supplied (see above). To rebuild this package from sources, extract `mpcplus-pkgbuild-1.0.0-2.tar.gz` and use the `makepkg` command to download the sources, build the binaries, and create the installation package:
 
 ```
-tar xzf mpcplus-pkgbuild-1.0.0-1.tar.gz
+tar xzf mpcplus-pkgbuild-1.0.0-2.tar.gz
 cd mpcplus
 makepkg --force --log --cleanbuild --noconfirm --syncdeps
 ```
@@ -102,6 +103,10 @@ scripts/install-dev-env.sh
 The `mkpkg` script detects the platform and creates an installable package in the package format native to that platform. After successfully building mpcplus, the resulting installable package will be found in the `./releases/<version>/` directory.
 
 ## Changelog
+
+Changes in version 1.0.0 release 2 include:
+
+* Support for Arch-like systems (e.g. Manjaro Linux)
 
 Changes in version 1.0.0 release 1 include:
 
