@@ -8,6 +8,7 @@ This release of mpcplus adds support for:
 * Create packaging for Arch Linux, CentOS, Fedora, Ubuntu, and Raspberry Pi OS
 * Integrated features and customizations from MusicPlayerPlus
 * Support for Arch-like systems (e.g. Manjaro Linux)
+* Linked with static Boost libraries for platform portability
 
 ## Installation
 
@@ -106,6 +107,7 @@ The `mkpkg` script detects the platform and creates an installable package in th
 
 Changes in version 1.0.0 release 2 include:
 
+* Link with static Boost libraries
 * Support for Arch-like systems (e.g. Manjaro Linux)
 
 Changes in version 1.0.0 release 1 include:
