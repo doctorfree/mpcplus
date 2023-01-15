@@ -46,8 +46,8 @@ else
     sudo ${PINS} makecache
     if [ "${fedora}" ]
     then
-      PKGS="ncurses-devel fftw3-devel libtool automake \
-            libmpdclient-devel taglib-devel"
+      PKGS="ncurses-devel fftw3-devel libtool automake libcurl-devel \
+            boost-devel boost-static readline-devel libmpdclient-devel taglib-devel"
       if [ "$1" == "-r" ]
       then
         sudo ${PINS} -y remove ${PKGS}
@@ -60,7 +60,7 @@ else
       if [ "${centos}" ]
       then
         PKGS="ncurses-devel fftw3-devel libtool automake libcurl-devel \
-              boost-devel readline-devel libmpdclient-devel \
+              boost-devel boost-static readline-devel libmpdclient-devel \
               taglib-devel"
         if [ "$1" == "-r" ]
         then
