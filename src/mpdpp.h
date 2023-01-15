@@ -121,7 +121,6 @@ struct Status
 	unsigned elapsedTime() const { return mpd_status_get_elapsed_time(m_status.get()); }
 	unsigned totalTime() const { return mpd_status_get_total_time(m_status.get()); }
 	unsigned kbps() const { return mpd_status_get_kbit_rate(m_status.get()); }
-	const mpd_audio_format *format() const { return mpd_status_get_audio_format(m_status.get()); }
 	unsigned updateID() const { return mpd_status_get_update_id(m_status.get()); }
 	const char *error() const { return mpd_status_get_error(m_status.get()); }
 	
@@ -497,12 +496,13 @@ struct Connection
 	void Disconnect();
 	
 	const std::string &GetHostname() { return m_host; }
-	int GetPort() { return m_port; }
+	const int GetPort() { return m_port; }
+	const std::string &GetPassword() { return m_password; }
 	
 	unsigned Version() const;
 	
 	int GetFD() const { return m_fd; }
-	
+
 	void SetHostname(const std::string &);
 	void SetPort(int port) { m_port = port; }
 	void SetTimeout(int timeout) { m_timeout = timeout; }
@@ -595,7 +595,10 @@ struct Connection
 	void idle();
 	int noidle();
 	void setNoidleCallback(NoidleCallback callback);
-	
+
+	void setBinaryLimit(size_t limit);
+	std::vector<uint8_t> GetArtwork(const std::string &uri, const std::string &cmd);
+
 private:
 	struct ConnectionDeleter {
 		void operator()(mpd_connection *connection) {
@@ -624,5 +627,6 @@ private:
 }
 
 extern MPD::Connection Mpd;
+extern MPD::Connection Mpd_artwork;
 
 #endif // MPCPLUS_MPDPP_H
