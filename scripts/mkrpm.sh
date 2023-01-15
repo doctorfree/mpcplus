@@ -47,8 +47,13 @@ else
               --enable-clock \
               --enable-visualizer \
               --with-fftw \
+              --enable-static \
               --with-taglib > configure$$.out
   make > make$$.out
+  cd src
+  rm -f mpcplus
+  g++ -g -O2 -flto -ftree-vectorize -ffast-math -std=c++14 -o mpcplus curses/formatted_color.o curses/scrollpad.o curses/window.o screens/browser.o screens/clock.o screens/help.o screens/lastfm.o screens/lyrics.o screens/media_library.o screens/outputs.o screens/playlist.o screens/playlist_editor.o screens/screen.o screens/screen_type.o screens/search_engine.o screens/sel_items_adder.o screens/server_info.o screens/song_info.o screens/sort_playlist.o screens/tag_editor.o screens/tiny_tag_editor.o screens/visualizer.o utility/comparators.o utility/html.o utility/option_parser.o utility/sample_buffer.o utility/string.o utility/type_conversions.o utility/wide_string.o actions.o bindings.o charset.o configuration.o curl_handle.o display.o enums.o format.o global.o helpers.o lastfm_service.o lyrics_fetcher.o macro_utilities.o mpdpp.o mutable_song.o mpcplus.o settings.o song.o song_list.o status.o statusbar.o tags.o title.o -Wl,-Bstatic -lboost_date_time -lboost_filesystem -lboost_locale -lboost_program_options -lboost_regex -lboost_thread -lboost_system -Wl,-Bdynamic -licui18n -licuuc -licudata -lmpdclient -lreadline -lpthread -Wl,-Bsymbolic-functions -lncursesw -ltinfo -lfftw3 -lcurl -ltag -pthread
+  cd ..
 fi
 
 ${SUDO} rm -rf dist

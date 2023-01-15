@@ -87,6 +87,7 @@ prefix="--prefix=/usr"
 [ "${CONFIGURE_ONLY}" ] && exit 0
 
 make
+scripts/relink-mpcplus.sh
 
 WERR="-Wextra -Wshadow -Werror -Wno-error=deprecated-declarations"
 CXXFLAGS="-O2 -march=native -pipe -std=c++0x ${WERR}"
