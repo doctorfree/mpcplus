@@ -19,6 +19,7 @@
 # sudo apt install libtag1-dev
 #
 # Configure options include:
+# --enable-artwork        Enable artwork screen [default=no]
 # --enable-outputs        Enable outputs screen [default=no]
 # --enable-visualizer     Enable music visualizer screen [default=no]
 # --enable-clock          Enable clock screen [default=no]
@@ -79,6 +80,7 @@ shift $(( OPTIND - 1 ))
 prefix="--prefix=/usr"
 [ "${PREFIX}" ] && prefix="--prefix=${PREFIX}"
 ./configure ${prefix} \
+            --enable-artwork \
             --enable-static-boost \
             --enable-outputs \
             --enable-clock \
