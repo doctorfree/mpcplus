@@ -55,6 +55,7 @@ else
   make distclean
   [ -x ./configure ] || ./autogen.sh > /dev/null
   ./configure --prefix=/usr \
+              --enable-static-boost \
               --enable-outputs \
               --enable-clock \
               --enable-visualizer \

@@ -79,6 +79,7 @@ shift $(( OPTIND - 1 ))
 prefix="--prefix=/usr"
 [ "${PREFIX}" ] && prefix="--prefix=${PREFIX}"
 ./configure ${prefix} \
+            --enable-static-boost \
             --enable-outputs \
             --enable-clock \
             ${VISUAL} \
