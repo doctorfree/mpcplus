@@ -79,7 +79,8 @@ shift $(( OPTIND - 1 ))
 
 export MAGICK_CFLAGS=`Magick++-config --cxxflags`
 export MAGICK_LDFLAGS=`Magick++-config --ldflags`
-export MAGICK_LIBS="${MAGICK_LDFLAGS} `Magick++-config --libs`"
+export LIBS=`Magick++-config --libs`
+export MAGICK_LIBS="${MAGICK_LDFLAGS} ${LIBS}"
 
 prefix="--prefix=/usr"
 [ "${PREFIX}" ] && prefix="--prefix=${PREFIX}"
