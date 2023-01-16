@@ -144,8 +144,13 @@ visualizer_type = spectrum
 ## mpcplus can display artwork in the terminal. The artwork is shown in the
 ## "artwork" screen, which can be optionally be displayed side-by-side with
 ## another screen via mpcplus's slave screen functionality.
+#
+## The "mpd_music_dir" config option should be set accordingly. ncmpcpp will
+## attempt to find and display an image named "cover.png", "cover.jpg",
+## "cover.tiff", or "cover.bmp" in the same directory as the current playing
+## song.
+#
 ## Ueberzug must be installed and visible in PATH for artwork to be displayed.
-##
 #
 ## Enable album art display
 #
@@ -158,7 +163,13 @@ albumart = yes
 ## respectively. May be empty, in which case the albumart_default_path fallback
 ## will be used.
 #
-albumart_sources = local, mpd_dir, mpd_embed
+#albumart_sources = local, mpd_dir, mpd_embed
+albumart_sources = local
+#
+## Method to draw album artwork to terminal. One of "ueberzug", "kitty".
+#
+albumart_backend = "kitty"
+#albumart_backend = "ueberzug"
 #
 ## Fallback to this image if no album cover art is found in the music library.
 #
@@ -177,8 +188,8 @@ font_height = 20
 #
 ## Move album artwork horizontally/vertically by specified number of characters.
 #
-#albumart_xoffset = 0
-#albumart_yoffset = 0
+albumart_xoffset = -5
+albumart_yoffset = 5
 #
 ##### system encoding #####
 ##
