@@ -17,6 +17,7 @@ ltmain.sh
 missing
 **.m4
 **/.deps/
+.package_note-mpcplus*
 extras/artist_to_albumartist
 src/mpcplus
 stamp-h1
