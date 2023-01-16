@@ -1,6 +1,6 @@
 [Mpcplus](https://github.com/doctorfree/mpcplus#readme) is an open source NCurses character-based Music Player Daemon (MPD) client inspired by `ncmpcpp`. The `mpcplus` MPD client is customized for integration with the [MusicPlayerPlus project](https://github.com/doctorfree/MusicPlayerPlus#readme) and the [Mppcava spectrum visualizer](https://github.com/doctorfree/mppcava#readme).
 
-**[Important Note:]** This initial release of the `mpcplus` package is intended to serve as a test release for future integration with `MusicPlayerPlus`. Although it is a fully featured `mpcplus`, MusicPlayerPlus integration is still in development and will not be available until MusicPlayerPlus version 3 is released. To get the fully integrated features of `mpcplus` at this time, install [MusicPlayerPlus version 2](https://github.com/doctorfree/MusicPlayerPlus/releases) rather than this package.
+**[Note:]** To get the fully integrated features of `mpcplus`, install [MusicPlayerPlus version 3](https://github.com/doctorfree/MusicPlayerPlus/releases) rather than this package.
 
 This release of mpcplus adds support for:
 
