@@ -16,8 +16,9 @@ fedora=
 if [ "${debian}" ]
 then
   PKGS="build-essential libfftw3-dev libtag1-dev libmpdclient-dev \
-        autotools-dev autoconf libtool libboost-all-dev fftw-dev \
-        pkg-config libncurses-dev libreadline-dev libcurl4-openssl-dev"
+        autoconf autotools-dev libtool libboost-all-dev fftw-dev \
+        graphicsmagick-libmagick-dev-compat pkg-config \
+        libncurses-dev libreadline-dev libcurl4-openssl-dev"
   if [ "$1" == "-r" ]
   then
     sudo apt remove ${PKGS}
@@ -28,7 +29,7 @@ else
   if [ "${arch}" ]
   then
     PKGS="base-devel fftw taglib libmpdclient boost boost-libs \
-          ncurses readline libcurl-compat"
+          ncurses readline libcurl-compat imagemagick"
     if [ "$1" == "-r" ]
     then
       sudo pacman -Rs ${PKGS}
@@ -47,7 +48,7 @@ else
     if [ "${fedora}" ]
     then
       PKGS="ncurses-devel fftw3-devel libtool automake \
-            libmpdclient-devel taglib-devel"
+            libmpdclient-devel taglib-devel ImageMagick-c++-devel"
       if [ "$1" == "-r" ]
       then
         sudo ${PINS} -y remove ${PKGS}
@@ -61,7 +62,7 @@ else
       then
         PKGS="ncurses-devel fftw3-devel libtool automake libcurl-devel \
               boost-devel readline-devel libmpdclient-devel \
-              taglib-devel"
+              taglib-devel ImageMagick-c++-devel"
         if [ "$1" == "-r" ]
         then
           sudo ${PINS} -y remove ${PKGS}
