@@ -78,7 +78,8 @@ shift $(( OPTIND - 1 ))
 [ "${AUTOGEN_ONLY}" ] && exit 0
 
 export MAGICK_CFLAGS=`Magick++-config --cxxflags`
-export MAGICK_LIBS=`Magick++-config --ldflags --libs`
+export MAGICK_LDFLAGS=`Magick++-config --ldflags`
+export MAGICK_LIBS="${MAGICK_LDFLAGS} `Magick++-config --libs`"
 
 prefix="--prefix=/usr"
 [ "${PREFIX}" ] && prefix="--prefix=${PREFIX}"

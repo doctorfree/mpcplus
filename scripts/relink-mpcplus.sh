@@ -12,7 +12,8 @@ fedora=
 [ "${ID}" == "fedora" ] && fedora=1
 [ "${debian}" ] || [ -f /etc/debian_version ] && debian=1
 
-MAGICK_LIBS=`Magick++-config --ldflags --libs`
+MAGICK_LDFLAGS=`Magick++-config --ldflags`
+MAGICK_LIBS="${MAGICK_LDFLAGS} `Magick++-config --libs`"
 
 cd src
 rm -f mpcplus
