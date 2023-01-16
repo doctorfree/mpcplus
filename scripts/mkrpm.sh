@@ -40,6 +40,9 @@ then
 else
   make clean
   make distclean
+  export MAGICK_CFLAGS=`Magick++-config --cxxflags`
+  export MAGICK_LIBS=`Magick++-config --ldflags`
+  export LIBS=`Magick++-config --libs`
   [ -x ./configure ] || ./autogen.sh > /dev/null
   ./configure --prefix=/usr \
               --enable-artwork \

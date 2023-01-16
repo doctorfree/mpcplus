@@ -23,6 +23,10 @@
 #include <csignal>
 #include <cstring>
 
+#ifdef ENABLE_ARTWORK
+#include <Magick++.h>
+#endif
+
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/locale.hpp>
 #include <iostream>
@@ -124,6 +128,9 @@ int main(int argc, char **argv)
 	
 	Actions::setWindowsDimensions();
 	Actions::initializeScreens();
+#ifdef ENABLE_ARTWORK
+	Magick::InitializeMagick(nullptr);
+#endif
 	
 	wHeader = new NC::Window(0, 0, COLS, Actions::HeaderHeight, "", Config.header_color, NC::Border());
 	if (Config.header_visibility || Config.design == Design::Alternative)
