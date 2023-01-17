@@ -79,6 +79,8 @@ ${SUDO} cp -a bin ${OUT_DIR}/${DESTDIR}/bin
 ${SUDO} cp src/mpcplus ${OUT_DIR}/${DESTDIR}/bin
 ${SUDO} cp extras/artist_to_albumartist \
            ${OUT_DIR}/${DESTDIR}/bin/artist_to_albumartist
+${SUDO} cp terminal_dimensions/terminal_dimensions \
+           ${OUT_DIR}/${DESTDIR}/bin/terminal_dimensions
 ${SUDO} cp *.desktop "${OUT_DIR}/${DESTDIR}/share/applications"
 ${SUDO} cp copyright ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}
 ${SUDO} cp NOTICE ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}

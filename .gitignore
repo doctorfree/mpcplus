@@ -19,6 +19,7 @@ missing
 **/.deps/
 .package_note-mpcplus*
 extras/artist_to_albumartist
+terminal_dimensions/terminal_dimensions
 src/mpcplus
 stamp-h1
 dist/*

@@ -11,7 +11,9 @@ sudo rm -rf pkg/dist/rpi
   make distclean
 }
 
-rm -f extras/artist_to_albumartist src/mpcplus
+rm -f extras/artist_to_albumartist \
+      src/mpcplus \
+      terminal_dimensions/terminal_dimensions
 
 rm -f aclocal.m4 \
     compile \

@@ -92,6 +92,7 @@ scripts/relink-mpcplus.sh
 WERR="-Wextra -Wshadow -Werror -Wno-error=deprecated-declarations"
 CXXFLAGS="-O2 -march=native -pipe -std=c++0x ${WERR}"
 make CXXFLAGS="${CXXFLAGS}" -C extras
+make -C terminal_dimensions
 
 if [ "${INSTALL}" ]
 then
