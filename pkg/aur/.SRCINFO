@@ -12,6 +12,7 @@ pkgbase = mpcplus
 	makedepends = pandoc
 	makedepends = zip
 	depends = boost-libs
+	depends = icu
 	depends = libcurl-compat
 	depends = libmpdclient
 	depends = ncurses

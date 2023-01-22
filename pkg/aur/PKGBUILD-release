@@ -10,7 +10,7 @@ arch=('x86_64' 'armv7h')
 url="https://github.com/doctorfree/mpcplus"
 license=('GPL2')
 
-depends=(boost-libs libcurl-compat libmpdclient ncurses readline taglib mpc python python-pip fftw)
+depends=(boost-libs libcurl-compat libmpdclient ncurses icu readline taglib mpc python python-pip fftw)
 makedepends=(boost git pandoc zip)
 install=mpcplus.install
 source=("${pkgname}::git+https://github.com/doctorfree/mpcplus.git#tag=${pkgver}")
