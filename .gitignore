@@ -20,6 +20,7 @@ missing
 .package_note-mpcplus*
 extras/artist_to_albumartist
 terminal_dimensions/terminal_dimensions
+!terminal_dimensions/Makefile
 src/mpcplus
 stamp-h1
 dist/*
