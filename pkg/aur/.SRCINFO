@@ -1,6 +1,6 @@
 pkgbase = mpcplus
 	pkgdesc = NCurses character based MPD client
-	pkgver = v1.0.0r2
+	pkgver = v1.0.1r1
 	pkgrel = 1
 	url = https://github.com/doctorfree/mpcplus
 	install = mpcplus.install

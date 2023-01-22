@@ -1,7 +1,8 @@
 # Changelog
 
-# mpcplus-1.0.0 release 3 (2023-01-20)
+# mpcplus-1.0.1 release 1 (2023-01-22)
 * Add `terminal_dimensions` utility for Kitty album cover art support
+* Link with additional static libraries for platform portability
 
 # mpcplus-1.0.0 release 2 (2023-01-15)
 * Add support for Arch-like systems (e.g. Manjaro Linux)
