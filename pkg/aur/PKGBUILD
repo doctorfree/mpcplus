@@ -55,7 +55,7 @@ build() {
                 --enable-clock \
                 --enable-visualizer \
                 --with-fftw \
-                --with-taglib > configure$$.out
+                --without-taglib > configure$$.out
     make > make$$.out
     cd src
     rm -f mpcplus

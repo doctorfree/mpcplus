@@ -22,7 +22,7 @@ jobs:
       run: ./autogen.sh
       working-directory: .
     - name: configure
-      run: ./configure --prefix=/usr --enable-outputs --enable-clock --enable-visualizer --with-fftw --with-taglib
+      run: ./configure --prefix=/usr --enable-outputs --enable-clock --enable-visualizer --with-fftw --without-taglib
       working-directory: .
     - name: make
       run: make

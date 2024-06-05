@@ -61,7 +61,7 @@ else
               --enable-visualizer \
               --with-fftw \
               --enable-static \
-              --with-taglib > configure$$.out
+              --without-taglib > configure$$.out
   make > make$$.out
   cd src
   rm -f mpcplus
