@@ -83,7 +83,7 @@ prefix="--prefix=/usr"
             --enable-outputs \
             --enable-clock \
             ${VISUAL} \
-            --with-taglib
+            --without-taglib
 [ "${CONFIGURE_ONLY}" ] && exit 0
 
 make
